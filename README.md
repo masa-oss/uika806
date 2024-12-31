@@ -15,7 +15,7 @@ This is a scheme interpreter that I wrote for my hobby, written in Java.
 
 The following Japanese e-book is written about this interpreter.
 
-『[はじめてのscheme制作]()』([Zenn Books](https://zenn.dev/books))
+『[はじめてのscheme制作](https://zenn.dev/clazz/books/a752b62f7b5e64)』([Zenn Books](https://zenn.dev/books))
 
 
 
@@ -42,6 +42,12 @@ chmod +x run4.sh
 Windows:
 .¥uika806.bat
 ```
+
+## Programs referred to
+
+This program uses some of the JSchemeMin sources.
+
+https://github.com/chungkwong/JSchemeMin
 
 
 ## License
