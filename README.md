@@ -39,8 +39,11 @@ Mac:
 chmod +x run4.sh
 ./run4.sh
 
+
 Windows:
-.¥uika806.bat
+.¥uika806.bat                  ( CUI mode  )
+.¥uika806-win.bat              ( Swing GUI mode )
+
 ```
 
 ## Programs referred to
