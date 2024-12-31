@@ -24,17 +24,15 @@ The following Japanese e-book is written about this interpreter.
 Download dependent files.
 ```
 cd download
-chmod +x *.sh
-./downlib.sh
-
-or mvn dependency:copy-dependencies
+mvn dependency:copy-dependencies
+cd ..
 ```
 
 Open the project in NetBeans or build it with ant with the command below .
 
 ```
 cd ant.run
-ant 
+ant small
 cd ..
 
 Mac:
@@ -42,7 +40,7 @@ chmod +x run4.sh
 ./run4.sh
 
 Windows:
-.¥uika_run.bat
+.¥uika806.bat
 ```
 
 
