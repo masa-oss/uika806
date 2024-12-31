@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="LispInterpreter" default="help" basedir="..">
+
+  <property name="SRC1_DIR"     value="./srccore"      />
+  <property name="SRC_DIR"     value="./src"           />
+  <property name="SRCS_DIR"     value="./ssmall"       />
+  <property name="CONF_DIR"     value="./ant.run/conf" />
+
+  <property name="DEST_DIR"    value="./classes"   />
+
+  <property name="LIB_DIR"    value="./download/target/dependency"   />
+
+  <property name="build.dir"    value="./dist"   />
+  <property name="main.class"    value="iris.example.cui.Main"   />
+
+  <path id="sources">
+    <pathelement path="${SRC1_DIR}"/>
+    <pathelement path="${SRC_DIR}"/>
+    <pathelement path="${SRCS_DIR}"/>
+  </path>
+
+  <path id='my-classpath'>
+    <pathelement location="${LIB_DIR}/slf4j-api-2.0.13.jar"             />
+    <pathelement location="${LIB_DIR}/logback-core-1.5.6.jar"           />
+    <pathelement location="${LIB_DIR}/logback-classic-1.5.6.jar"        />
+
+    <pathelement location="${LIB_DIR}/icu4j-75.1.jar"        />
+    <pathelement location="./ant.run/AbsoluteLayout.jar" />
+
+    <pathelement path="./" />
+  </path>
+
+
+  <target name="prepare">
+    <tstamp />
+    <mkdir dir="${DEST_DIR}" />
+  </target>
+
+  <target name="comppico" depends="prepare">
+
+    <echo message="compiling ... srccore" />
+    <javac srcdir="${SRC1_DIR}" destdir="${DEST_DIR}"
+       encoding="UTF-8" debug="on" debuglevel="source,lines,vars" includeantruntime="false">
+      <classpath refid="my-classpath" />
+      <include name="**/*.java" />
+      
+      <compilerarg value="-Xlint:unchecked" />	
+    </javac>
+
+
+    <echo message="compiling ... src" />
+    <javac srcdir="${SRC_DIR}" destdir="${DEST_DIR}"
+       encoding="UTF-8" debug="on" debuglevel="source,lines,vars" includeantruntime="false">
+     <compilerarg value="-Xlint:deprecation" />
+      <classpath refid="my-classpath" />
+      <!--  include name="**/*.java" -->
+      
+       <exclude name="**/small/**" />
+    </javac>
+
+
+    <copy  todir="${DEST_DIR}" overwrite="true">
+       <fileset dir="${CONF_DIR}"          includes="**/*.xml" >
+       </fileset>
+    </copy>
+
+  </target>
+
+
+  <target name="compsmall" depends="prepare">
+
+    <echo message="compiling ... srccore" />
+    <javac srcdir="${SRC1_DIR}" destdir="${DEST_DIR}"
+       encoding="UTF-8" debug="on" debuglevel="source,lines,vars" includeantruntime="false">
+      <classpath refid="my-classpath" />
+      <include name="**/*.java" />
+      
+      <compilerarg value="-Xlint:unchecked" />	
+    </javac>
+
+
+    <echo message="compiling ... src" />
+    <javac srcdir="${SRC_DIR}" destdir="${DEST_DIR}"
+       encoding="UTF-8" debug="on" debuglevel="source,lines,vars" includeantruntime="false">
+      <classpath refid="my-classpath" />
+      <include name="**/*.java" />
+      
+      <compilerarg value="-Xlint:unchecked" />	
+    </javac>
+
+    <echo message="compiling ... ssmall" />
+    <javac srcdir="${SRCS_DIR}" destdir="${DEST_DIR}"
+       encoding="UTF-8" debug="on" debuglevel="source,lines,vars" includeantruntime="false">
+      <classpath refid="my-classpath" />
+      <include name="**/*.java" />
+      
+      <compilerarg value="-Xlint:unchecked" />	
+    </javac>
+
+    <copy  todir="${DEST_DIR}" overwrite="true">
+       <fileset dir="${CONF_DIR}"          includes="**/*.xml" >
+       </fileset>
+    </copy>
+
+  </target>
+
+
+  <target name="pico" depends="comppico">
+   <jar jarfile="${build.dir}/uika806-pico-0.1.jar" basedir="${DEST_DIR}">
+    <manifest>
+      <attribute name="Main-Class" value="${main.class}"/>
+    </manifest>
+   </jar>
+  </target>
+
+  <target name="small" depends="compsmall">
+   <jar jarfile="${build.dir}/uika806-small-0.1.jar" basedir="${DEST_DIR}">
+    <manifest>
+      <attribute name="Main-Class" value="${main.class}"/>
+    </manifest>
+   </jar>
+  </target>
+
+<!--
+
+      <attribute name="Class-Path" value="${runtime.classpath}"/>
+      <attribute name="Implementation-Title"   value="${Name}"/>
+      <attribute name="Implementation-Version" value="${version}"/>
+      <attribute name="Implementation-Vendor"  value="${vendor}"/>
+      <attribute name="Build-Id"
+        value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}])"/>
+-->
+
+  <target name="javadoc">
+    <javadoc packagenames="*"   sourcepathref="sources" 
+      destdir="javadoc-dir" encoding="UTF-8" charset="UTF-8" >
+<!--
+		<link href="https://docs.oracle.com/en/java/javase/17/docs/api/index.html"/>
+
+-->
+		<link href="https://docs.oracle.com/javase/8/docs/api/"/>
+      		<classpath refid="my-classpath" />
+     </javadoc>
+  </target>
+
+  <target name="clean">
+    <delete dir="${DEST_DIR}" />
+
+  </target>
+
+  <target name="help">
+    <echo message="Usage: " />
+    <echo message=" ant  clean    -----  clean class files." />
+    <echo message=" ant  javadoc  -----  make javadoc." />
+    <echo message=" ant  small    -----  compile and make jar" />
+
+  </target>
+</project>

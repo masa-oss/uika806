@@ -1,0 +1,12 @@
+
+eval start : (let ((x 'outer))
+  (let-syntax ((m (syntax-rules () ((m) x))))
+    (let ((x 'inner))
+      (m)))))
+
+INFO com.github.chungkwong.jschememin.primitive.SyntaxRule param=(ScmNil ((m) x))
+INFO com.github.chungkwong.jschememin.type.ScmSyntaxRules spec=(ScmNil ((m) x))
+INFO com.github.chungkwong.jschememin.type.ScmSyntaxRules ellipsis=...
+INFO com.github.chungkwong.jschememin.type.ScmSyntaxRules literals=[]
+INFO com.github.chungkwong.jschememin.type.ScmSyntaxRules 83) transformed=(({41, |lambda|} (x) (m)) (quote inner))
+INFO com.github.chungkwong.jschememin.type.ScmSyntaxRules 83) transformed={42, |x|}

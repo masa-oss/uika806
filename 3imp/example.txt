@@ -1,0 +1,123 @@
+(compile 'x '(HALT))
+
+(REFER x (HALT))
+
+(compile '(quote a) '(HALT))
+
+(CONSTANT a (HALT))
+
+(compile '(lambda (x y) (car x) (cdr y)) '(HALT))
+ERROR: wrong number of arguments for #<closure ((compile compile) vars body)> (required 2, got 3)
+
+(compile '(lambda (x y) (car x) ) '(HALT))
+
+(CLOSE (x y) (REFER x (ARGUMENT (REFER car (APPLY)))) (HALT))
+
+(compile '(if a b c) '(HALT))
+
+(REFER a (TEST (REFER b (HALT)) (REFER c (HALT))))
+
+(compile '(set! x 123) '(HALT))
+
+(CONSTANT 123 (ASSIGN x (HALT)))
+
+(compile '(set! x (+ 1 2)) '(HALT))
+
+????
+(FRAME (ASSIGN x (HALT))
+ (CONSTANT 2 (ARGUMENT (CONSTANT 1 (ARGUMENT (REFER + (APPLY)))))))
+
+(compile  '(call/cc (lambda(cc) (if (< x 0) x (cc 99)))) '(HALT))
+
+(FRAME
+ (HALT)
+ (CONTI
+  (ARGUMENT
+   (CLOSE
+    (cc)
+    (FRAME
+     (TEST (REFER x (RETURN)) (CONSTANT 99 (ARGUMENT (REFER cc (APPLY)))))
+     (CONSTANT 0 (ARGUMENT (REFER x (ARGUMENT (REFER < #))))))
+    (APPLY)))))
+
+
+
+
+
+
+(compile '(car x) '(quote b))
+
+(FRAME 'b (REFER x (ARGUMENT (REFER car (APPLY)))))
+
+
+ (evaluate '(+ 1 2))
+3
+
+ (evaluate '(car '(a b c)))
+
+a
+
+
+ (evaluate '(= 1 2))
+
+#f
+
+
+ (lookup 'a '((a 1)))
+((1))
+
+
+ (lookup 'a '((a . 1)))
+(1)
+
+
+ (lookup 'a '( ((a b) 1 2) ((x y ) 3 4)  ) )
+(1 2)
+
+
+ (lookup 'b '( ((a b) 1 2) ((x y ) 3 4)  ) )
+(2)
+
+ (lookup 'x '( ((a b) 1 2) ((x y ) 3 4)  ) )
+(3 4)
+
+ (lookup 'y '( ((a b) 1 2) ((x y ) 3 4)  ) )
+(4)
+
+ (lookup 'w '( ((a b) 1 2) ((x y ) 3 4)  ) )
+ ERROR: pair required, but got ()
+
+
+
+`((       (+ * - / = < > not car cdr cons)	   ,@(list + * - / = < > not car cdr cons)))
+
+==>
+(((+ * - / = < > not car cdr cons)
+   #<subr (+ :rest args)>
+   #<subr (* :rest args)>
+    #<subr (- arg1 :rest args)>
+   #<subr (/ arg1 :rest args)>
+    #<subr (= arg0 arg1 :rest args :optarray oarg)>
+   #<subr (< arg0 arg1 :rest args :optarray oarg)>
+   #<subr (> arg0 arg1 :rest args :optarray oarg)>
+    #<subr (not obj)>
+   #<subr (car obj)>
+    #<subr (cdr obj)>
+     #<subr (cons obj1 obj2)>))
+
+gosh$ (apply (lambda (x) (list x x)) '(2))
+(2 2)
+gosh$ (record (x) '(2) (list x x))
+(2 2)
+gosh$
+
+gosh$ (record (x) '(2) (list x x))
+(2 2)
+gosh$ (tail? '(RETURN 1 2) )
+#t
+gosh$ (tail? '(return 1 2))
+#f
+
+
+
+

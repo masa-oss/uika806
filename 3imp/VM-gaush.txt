@@ -1,0 +1,157 @@
+
+;;  https://daretoku-unix.blogspot.com/2015/01/3imp-1.html
+
+;; A heap model lisp compiler and virtual machine.
+
+;;  (load "VM-gaush.txt")
+;;   *** ERROR: cannot find "VM-gaush.txt" in ("C:\\usr\\Gauche\\share\\gauche-0.98\\site\\lib"
+;;                                                                   "C:\\usr\\Gauche\\share\\gauche-0.98\\0.9.15\\lib")
+
+
+
+
+(define recur let)
+
+(define-syntax record
+  (syntax-rules ()
+    [(_ vars val exp ...)
+     (apply (lambda vars exp ...) val)]))
+
+(define-syntax record-case
+  (syntax-rules (else)
+    [(_ exp
+	[key vars exp2 ...]
+	...
+	[else exp3 ...])
+     (let ((r exp))
+       (cond
+	[(eq? (car r) 'key)
+	 (record vars (cdr r) exp2 ...)]
+	...
+	[else exp3 ...]))]
+    [(_ exp
+	[arg ...]
+	...)
+     (record-case exp
+       [arg ...]
+       ...
+       [else #f])]))
+
+(define tail?
+  (lambda (next)
+    (eq? (car next) 'RETURN)))
+
+(define compile
+  (lambda (x next)
+    (cond
+     [(symbol? x)
+      (list 'REFER x next)]
+     [(pair? x)
+      (record-case x
+	[quote (obj)
+	       (list 'CONSTANT obj next)]
+	[lambda (vars body)
+	  (list 'CLOSE vars (compile body '(RETURN)) next)]
+	[if (test then else)
+	    (let ([thenc (compile then next)]
+		  [elsec (compile else next)])
+	      (compile test (list 'TEST thenc elsec)))]
+	[set! (var x)
+	      (compile x (list 'ASSIGN var next))]
+	[call/cc (x)
+		 (let ([c (list 'CONTI
+				(list 'ARGUMENT
+				      (compile x '(APPLY))))])
+		   (if (tail? next)
+		       c
+		       (list 'FRAME next c)))]
+	[else
+	 (recur loop ([args (cdr x)]
+		      [c (compile (car x) '(APPLY))])
+	   (if (null? args)
+	       (if (tail? next)
+		   c
+		   (list 'FRAME next c))
+	       (loop (cdr args)
+		     (compile (car args)
+			      (list 'ARGUMENT c)))))])]
+     [else
+      (list 'CONSTANT x next)])))
+
+(define lookup
+  (lambda (var e)
+    (recur nxtrib ([e e])
+      (recur nxtelt ([vars (caar e)] [vals (cdar e)])
+	(cond
+	 [(null? vars) (nxtrib (cdr e))]
+	 [(eq? vars var) (list vals)]
+	 [(eq? (car vars) var) vals]
+	 [else (nxtelt (cdr vars) (cdr vals))])))))
+
+(define extend
+  (lambda (env vars vals)
+    (cons (cons vars vals) env)))
+
+(define closure
+  (lambda (body e vars)
+    (list body e vars)))
+
+(define continuation
+  (lambda (s)
+    (closure (list 'NUATE s 'V) '() '(V))))
+
+(define call-frame
+  (lambda (x e r s)
+    (list x e r s)))
+
+(define VM
+  (lambda (a x e r s)
+    #;
+    (begin
+      (print "accm " a)
+      (print "expr " x)
+      (print "envi " e)
+      (print "ribs " r)
+      (print "stck " s)
+      (newline))
+    (record-case x
+      [HALT () a]
+      [REFER (var x)
+	     (VM (car (lookup var e)) x e r s)]
+      [CONSTANT (obj x)
+		(VM obj x e r s)]
+      [CLOSE (vars body x)
+	     (VM (closure body e vars) x e r s)]
+      [TEST (then else)
+	    (VM a (if a then else) e r s)]
+      [ASSIGN (var x)
+	      (set-car! (lookup var e) a)
+	      (VM a x e r s)]
+      [CONTI (x)
+	     (VM (continuation s) x e r s)]
+      [NUATE (s var)
+	      (VM (car (lookup var e)) '(RETURN) e r s)]
+      [FRAME (ret x)
+	     (VM a x e '() (call-frame ret e r s))]
+      [ARGUMENT (x)
+		(VM a x e (cons a r) s)]
+      [APPLY ()
+	     (if (procedure? a)
+		 (VM (apply a r) '(RETURN) e r s)
+		 (record (body e vars) a
+			 (VM a body (extend e vars r) '() s)))]
+      [RETURN ()
+	      (record (x e r s) s
+		      (VM a x e r s))]
+      [else #f])))
+
+(define evaluate
+  (lambda (exp)
+    (VM '()
+	(compile exp '(HALT))
+	`((       (+ * - / = < > not car cdr cons)
+	   ,@(list + * - / = < > not car cdr cons)))
+	'()
+	'())))
+	
+	

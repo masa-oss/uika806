@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+<groupId>id</groupId>
+<artifactId>dl</artifactId>
+<version>1</version>
+
+
+
+  <properties>
+    <!-- Make the build reproducible, see root `pom.xml` -->
+    <!-- This is duplicated here because that is recommended by `artifact:check-buildplan` -->
+    <project.build.outputTimestamp>2023-01-01T00:00:00Z</project.build.outputTimestamp>
+
+    <excludeTestCompilation>**/Java17*</excludeTestCompilation>
+  </properties>
+
+  <dependencies>
+
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl -->
+        
+        <!--   slf4j  to log4j
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>2.23.1</version>
+            <scope>test</scope>
+        </dependency>
+-->
+
+
+<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+<dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.5.6</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.ibm.icu/icu4j -->
+<dependency>
+    <groupId>com.ibm.icu</groupId>
+    <artifactId>icu4j</artifactId>
+    <version>75.1</version>
+</dependency>
+
+
+  </dependencies>
+
+  <build>
+    <plugins>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>JDK17</id>
+      <activation>
+        <jdk>[17,)</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testRelease>17</maven.compiler.testRelease>
+        <excludeTestCompilation />
+      </properties>
+    </profile>
+  </profiles>
+</project>
