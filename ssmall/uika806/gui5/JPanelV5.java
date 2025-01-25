@@ -2,9 +2,7 @@
  * SPDX-License-Identifier: MPL-2.0
  * Author:  Masahito Hemmi.
  */
-
-package uika806.gui;
-
+package uika806.gui5;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +18,7 @@ import uika806.fn011.reader.Tokenizer;
 import uika806.kernel.VMLogger;
 import uika806.kernel.AFn;
 import uika806.kernel.BuiltInFuncs;
-import uika806.objects.EmptyList;
+import uika806.kernel.Values;
 import uika806.objects.SSymbol;
 import uika806.objects.EndOfFile;
 
@@ -31,45 +29,57 @@ import uika806.pico.macro.IMacro;
 import uika806.reader.LispReaderFx;
 import uika806.small.env.BuiltInFuncsImpl2;
 import uika806.syntax.Environ;
-import uika806.vm4.Compile4;
+import uika806.vm4.Compile5;
+
 import uika806.vm4.Op;
 import uika806.vm4.SimpleOpPrettyPrinter;
 import uika806.vm4.VM4;
 import uika806.vm4.VM4Logger;
 
-/**
- *
- * @author hemmi
- */
-public class JPanelV4 extends javax.swing.JPanel {
+public class JPanelV5 extends javax.swing.JPanel {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(JPanelV4.class);
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(JPanelV5.class);
 
     /**
-     * Creates new form JPanelV4
+     * Creates new form JPanelV5
      */
-    public JPanelV4() {
+    public JPanelV5() {
 
         initComponents();
 
         this.jCheckBox1.setSelected(true);
         this.jCheckBox2.setSelected(true);
 
-        this.jTextArea1.setText("(import  (scheme write))");
-        this.jTextArea1.setText( SAMPLE1 );
+        //   this.jTextArea1.setText("(import  (scheme write))");
+        this.jTextArea1.setText( SAMPLE6 );
+     //   this.jTextArea1.setText("(apply   (lambda (x)  (+ 1 x)) '(10))");
+
     }
 
-    static final String SAMPLE1 = "(*define (bazoo x)\n" +
-    "    (define-syntax   myif\n" +
-    "         (syntax-rules ()\n" +
-    "            ((myif test exp1 exp2)\n" +
-    "             (if  test exp1 exp2))\n" +
-    "         )\n" +
-    "    )\n" +
-    "    (myif  (>= x  0 ) 'plus 'minus    ))";
-    
-    
-    
+    static final String SAMPLE1 = "(*define (bazoo x)\n"
+            + "    (define-syntax   myif\n"
+            + "         (syntax-rules ()\n"
+            + "            ((myif test exp1 exp2)\n"
+            + "             (if  test exp1 exp2))\n"
+            + "         )\n"
+            + "    )\n"
+            + "    (myif  (>= x  0 ) 'plus 'minus    ))";
+
+    static final String SAMPLE2 = "(cond (a 1) \n"
+            + "     (else 3 4))";
+
+    static final String SAMPLE3
+            = "(case (* 2 3) ((2 3 5 7) (quote prime)) ((1 4 6 8 9) (quote composite))))";
+
+    static final String SAMPLE4 = "(let ((=> #f))  \n"
+            + "    (cond (#t => 'ok))))";
+
+    static final String SAMPLE5 = "(letrec ((a 1)  (b 2)  )    \n"
+            + "       (list a b) )";
+
+    static final String SAMPLE6 = "(-mexp '(letrec ((a 1)  (b 2)  )    \n"
+            + "       (list a b) ))";
+
     Environ lexEnv;
 
     /**
@@ -91,6 +101,7 @@ public class JPanelV4 extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jCheckBox2 = new javax.swing.JCheckBox();
         jButton2 = new javax.swing.JButton();
+        jCheckBox3 = new javax.swing.JCheckBox();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -115,7 +126,7 @@ public class JPanelV4 extends javax.swing.JPanel {
         add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 160, -1, -1));
 
         jCheckBox1.setText("Compile");
-        add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 50, -1, -1));
+        add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 30, 110, -1));
 
         jLabel1.setText("jLabel1");
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -128,7 +139,7 @@ public class JPanelV4 extends javax.swing.JPanel {
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, 380, -1));
 
         jCheckBox2.setText("VM");
-        add(jCheckBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 90, 90, -1));
+        add(jCheckBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 60, 90, -1));
 
         jButton2.setText("Dump");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -137,6 +148,9 @@ public class JPanelV4 extends javax.swing.JPanel {
             }
         });
         add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 250, -1, -1));
+
+        jCheckBox3.setText("VM Log");
+        add(jCheckBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 90, 100, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     // eval button
@@ -149,10 +163,11 @@ public class JPanelV4 extends javax.swing.JPanel {
 
             CodepointLispStream fr = CodepointLispStream.fromUtf8(str);
 
-            boolean runVM = jCheckBox2.isSelected();
             boolean bCompile = jCheckBox1.isSelected();
+            boolean runVM = jCheckBox2.isSelected();
+            boolean bShowVMLog = jCheckBox3.isSelected();
 
-            Object eof = new EndOfFile();
+            Object eof = EndOfFile.INSTANCE;
             for (int i = 0; i < 1; i++) {
 
                 Tokenizer tk = new Tokenizer(fr);
@@ -164,36 +179,23 @@ public class JPanelV4 extends javax.swing.JPanel {
 
                 if (bCompile) {
 
-                 //   VMLogger log = new VM4Logger();
+                    //   VMLogger log = new VM4Logger();
                     VMLogger log = null;
-/*
-                    Environ compileTime = lexEnv.extend(EmptyList.NIL, 0L);
-                    LOG.info("117) ctEnv={}", compileTime.printEnv());
-                    Compile4 comp = new Compile4(log, compileTime);
-*/
-                    Compile4 comp = new Compile4(log, lexEnv);
-                    
-                    
-                    Op op = comp.invoke(sexp, Op.HALT);
-/*
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw, true);
-                    op.debugContents(pw);
-                    pw.flush();
-                    LOG.info("195) compiled={}", sw.toString());
-*/
-                    
+                    Compile5 comp = new Compile5(log);
+
+                    Op op = comp.invoke(sexp, Op.HALT, lexEnv);
+
                     CodepointOutputPortImpl outPort0 = new CodepointOutputPortImpl();
                     SimpleOpPrettyPrinter pp0 = new SimpleOpPrettyPrinter();
                     pp0.printIndentTo(op, outPort0);
-                    
-                    LOG.info("173) {}",                       outPort0.getAsString());
-                    
+
+                    LOG.info("173) {}", outPort0.getAsString());
+
                     if (runVM) {
                         DisplayCb done = new DisplayCb();
 
                         BuiltInFuncsImpl2 bu = new BuiltInFuncsImpl2();
-                        Vm4Worker doInVM = new Vm4Worker(op, lexEnv, bu, done);
+                        Vm4Worker doInVM = new Vm4Worker(op, lexEnv, bu, done, bShowVMLog);
                         doInVM.execute();
 
                         this.jTextArea2.setText("Running ... , Please wait");
@@ -234,47 +236,41 @@ public class JPanelV4 extends javax.swing.JPanel {
         list.addAll(this.lexEnv.getUnmodifiableMap().entrySet());
 
         Collections.sort(list, new SymbolsComp());
+
         list.forEach((e)
-                -> sb.append(e.getKey().getName()).append(" = ").append(procString(e.getValue()))
+                -> sb.append(e.getKey().getReadableName()).append(" = ").append(procString(e.getValue()))
                         .append(" ")
-                        .append( macroString(e.getValue()))   
+                        .append(macroString(e.getValue()))
                         .append("\n"));
 
         jTextArea2.setText(sb.toString());
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    
     String procString(Object proc) {
-        
+
         if (proc instanceof AFn) {
             AFn afn = (AFn) proc;
             return "<AFn " + afn.getName() + ">";
         }
         return proc.toString();
     }
-    
-    
-    
-    
-    
+
     String macroString(Object fun) {
         if (fun instanceof IMacro) {
             return "[MACRO]";
         }
         return "";
     }
-    
-    
+
     class SymbolsComp implements Comparator<Entry<SSymbol, Object>> {
 
         @Override
         public int compare(Entry<SSymbol, Object> o1, Entry<SSymbol, Object> o2) {
 
-            String s1 = o1.getKey().getName();
-            String s2 = o2.getKey().getName();
+            String s1 = o1.getKey().getReadableName();
+            String s2 = o2.getKey().getReadableName();
             return s1.compareTo(s2);
         }
-
     }
 
     static class WorkerResult {
@@ -283,7 +279,7 @@ public class JPanelV4 extends javax.swing.JPanel {
 
         long endTime;
     }
-    
+
     final WorkerResult workerResult = new WorkerResult();
 
     class DisplayCb implements Runnable {
@@ -293,12 +289,15 @@ public class JPanelV4 extends javax.swing.JPanel {
             Object sexp = workerResult.obj;
             if (sexp != null) {
 
-                CodepointOutputPortImpl outPort = new CodepointOutputPortImpl();
-                
-                new PrinterShared().prin1(sexp, outPort);
+                if (sexp instanceof Values) {
 
-                String str2 = outPort.getAsString();
-                jTextArea2.setText(str2);
+                    String decoded = decodeValues((Values) sexp);
+                    jTextArea2.setText(decoded);
+
+                } else {
+                    String str2 = decodeObject(sexp);
+                    jTextArea2.setText(str2);
+                }
 
                 String clazz = sexp.getClass().getName();
                 jLabel1.setText(clazz);
@@ -313,6 +312,62 @@ public class JPanelV4 extends javax.swing.JPanel {
             }
             LOG.info("================= Eval thread end");
         }
+
+        String decodeObject(Object sexp) {
+
+            CodepointOutputPortImpl outPort = new CodepointOutputPortImpl();
+
+            new PrinterShared().prin1(sexp, outPort);
+
+            String str2 = outPort.getAsString();
+            return str2;
+        }
+
+        String decodeValues(Values v) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Values\n");
+
+            int num = v.getNum();
+            if (num == 0) {
+                sb.append("( empty )");
+            } else if (num == 1) {
+                sb.append("[1] ");
+                sb.append(decodeObject(v.getValue1()));
+            } else if (num == 2) {
+                sb.append("[1] ");
+                sb.append(decodeObject(v.getValue1()));
+                sb.append("\n");
+                sb.append("[2] ");
+                sb.append(decodeObject(v.getValue2()));
+
+            } else if (num == 3) {
+                sb.append("[1] ");
+                sb.append(decodeObject(v.getValue1()));
+                sb.append("\n");
+                sb.append("[2] ");
+                sb.append(decodeObject(v.getValue2()));
+                sb.append("\n");
+                sb.append("[3] ");
+                sb.append(decodeObject(v.getValue3()));
+
+            } else if (num == 4) {
+                sb.append("[1] ");
+                sb.append(decodeObject(v.getValue1()));
+                sb.append("\n");
+                sb.append("[2] ");
+                sb.append(decodeObject(v.getValue2()));
+                sb.append("\n");
+                sb.append("[3] ");
+                sb.append(decodeObject(v.getValue3()));
+                sb.append("\n");
+                sb.append("[4] ");
+                sb.append(decodeObject(v.getValue4()));
+
+            }
+            return sb.toString();
+        }
+
     }
 
     public class Vm4Worker extends SwingWorker<Object, Object> {
@@ -322,13 +377,15 @@ public class JPanelV4 extends javax.swing.JPanel {
         BuiltInFuncs bu;
         final Runnable run;
         long startTime;
+        boolean showLog;
 
-        Vm4Worker(Op x, Environ lexEnv, BuiltInFuncs bu, Runnable r) {
+        Vm4Worker(Op x, Environ lexEnv, BuiltInFuncs bu, Runnable r, boolean showLog) {
 
             this.x = x;
             this.e = lexEnv;
             this.bu = bu;
             this.run = r;
+            this.showLog = showLog;
         }
 
         @Override
@@ -337,8 +394,7 @@ public class JPanelV4 extends javax.swing.JPanel {
             startTime = System.currentTimeMillis();
             Object obj = null;
             try {
-              //  VMLogger logger = null;
-                VMLogger logger = new VM4Logger();
+                VMLogger logger = (showLog) ? new VM4Logger() : null;
 
                 VM4 vm = new VM4(x, e, logger, bu);
 
@@ -346,7 +402,7 @@ public class JPanelV4 extends javax.swing.JPanel {
             } catch (UnboundException ue) {
                 loggingEnviron(ue);
                 obj = ue;
-                
+
             } catch (RuntimeException re) {
                 LOG.warn("catch:", re);
                 obj = re;
@@ -371,21 +427,18 @@ public class JPanelV4 extends javax.swing.JPanel {
         }
 
         void loggingEnviron(UnboundException ue) {
-            
-            LOG.error("#############   Unbound : {}", ue.getSymbol());
-            
+
+            LOG.error("337) #############   Unbound : {}", ue.getSymbol().getReadableName());
+
             Environ environ = ue.getEnviron();
             while (environ.getParent() != null) {
-                
-                LOG.error("Env : {}"  , environ.getUnmodifiableMap()  );
+
+//                LOG.error("Env : {}"  , environ.getUnmodifiableMap()  );
+                LOG.error("env = {}", environ.printEnv());
                 LOG.error("------------------------");
                 environ = environ.getParent();
             }
-            
-            
         }
-        
-        
     }
 
 
@@ -394,6 +447,7 @@ public class JPanelV4 extends javax.swing.JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

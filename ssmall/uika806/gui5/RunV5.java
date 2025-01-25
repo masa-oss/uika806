@@ -2,36 +2,35 @@
  * SPDX-License-Identifier: MPL-2.0
  * Author:  Masahito Hemmi.
  */
-package uika806.gui;
+package uika806.gui5;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
 import javax.swing.JFrame;
 import org.slf4j.LoggerFactory;
-import uika806.Services;
 
+import uika806.Services;
 import uika806.port.CurrentPort;
 import uika806.small.env.EnvironFactory;
 
 /**
  *
  */
-public class RunV4 extends JFrame {
+public class RunV5 extends JFrame  {
     
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RunV4.class);
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(RunV5.class);
 
-    JPanelV4 panel = new JPanelV4();
+    JPanelV5 panel = new JPanelV5();
     
-
-    public RunV4() {
+    public RunV5() {
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         this.setSize(980, 560);
-        setTitle("r7rs small V4");
+        setTitle("uika806 (tiny r7rs scheme)");
         this.getContentPane().add(panel, BorderLayout.CENTER);
     }
     
-    public static RunV4 theApp;
+    public static RunV5 theApp;
     
     public static void main(String args[]) {
 
@@ -48,34 +47,30 @@ public class RunV4 extends JFrame {
         }
 
         String property = System.getProperty("java.version");
-
         LOG.info("java.version={}", property);
         String property2 = System.getProperty("java.vendor");
         LOG.info("java.vendor={}", property2);
 
+
         try {
-            
             CurrentPort.init(true);
-            
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            LOG.error("IOException", ioe);
             return;
         }
 
-        theApp = new RunV4();
-        
-        
+        theApp = new RunV5();
         EnvironFactory factory = new EnvironFactory();
-        factory.loadBase();
-     
-        //                      ▼
-        theApp.panel.lexEnv = factory.getFirstEnviron( true, false);
+        factory.loadBase("startup5.scm", 5);
+
+        theApp.panel.lexEnv = factory.getFirstEnviron(true, false);
 
         Services.environFactory = factory;
         
+        LOG.info("_____________ Initialize done _____________");
         
-        final RunV4 ef = theApp;
-
+        final RunV5 ef = theApp;
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
@@ -83,7 +78,7 @@ public class RunV4 extends JFrame {
                 ef.setVisible(true);
             }
         });
-
+        
     }
     
 }
