@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uika806.objects.Cell;
@@ -143,7 +144,7 @@ public class SchemeEnvironment extends Environment implements Environ {
         if (LOG.isDebugEnabled()) {
             String sVars = CurrentPort.printString(vars);
             String sVals = CurrentPort.printString(vals);
-            LOG.debug("=======================********** extend {}, {}", sVars, sVals);
+            LOG.debug("  ********** extend {}, {}", sVars, sVals);
         }
         
         SchemeEnvironment newEnv = new SchemeEnvironment(this);
@@ -153,7 +154,6 @@ public class SchemeEnvironment extends Environment implements Environ {
         while (pointer instanceof Cell) {
 
             SSymbol var0 = (SSymbol) ((Cell) pointer).getCar();
-            //  LOG.info("53) env.add({}, {})", var0, "?");
 
             newEnv.add(var0, ((Cell) expr2).getCar());
             pointer = ((Cell) pointer).getCdr();
@@ -162,8 +162,11 @@ public class SchemeEnvironment extends Environment implements Environ {
         
         if (pointer instanceof SSymbol) {
 
-//                LOG.info("61) env.add({}, {})", pointer, expr2);
             newEnv.add((SSymbol) pointer, expr2);
+        }
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("********** newEnv= {}", newEnv);
         }
 
         return newEnv;
@@ -183,12 +186,40 @@ public class SchemeEnvironment extends Environment implements Environ {
         String hex = String.format("%09x", hashCode);
         
         if (parent == null) {
-            return " global@" + hex;
+            return "SchemeEnvironment:global@" + hex;
             
         } else {
-            return "SchemeEnvironment = " + bindings.toString() + "@" + hex  ;
+            /*
+            String wk = bindings.toString();
+            int len = wk.length();
+            wk = wk.substring(1, len-1);
+            */
+            String wk = mapToString();
+            
+            return "SchemeEnvironment[ " + wk + " ]@" + hex  ;
         }
 
     }
 
+    private String mapToString() {
+        
+        StringBuilder sb = new StringBuilder();
+        Set<SSymbol> keySet = bindings.keySet();
+        
+        String sep = "";
+        for (SSymbol sym : keySet) {
+            Object val = bindings.get(sym);
+            String str = sym.getReadableName();
+            String sVal = (val == null) ? "null" : val.toString();
+            sb.append(sep);
+            sb.append(str);
+            sb.append("=");
+            sb.append(sVal);
+            sep = ", ";
+        }
+        
+        return sb.toString();
+    }
+    
+    
 }

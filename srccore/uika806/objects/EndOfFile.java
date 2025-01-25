@@ -6,11 +6,12 @@ package uika806.objects;
 
 /**
  *
- * @author hemmi
  */
-public class EndOfFile {
+public final class EndOfFile {
     
     public static EndOfFile INSTANCE = new EndOfFile();
     
-    
+    private EndOfFile() {
+        
+    }
 }

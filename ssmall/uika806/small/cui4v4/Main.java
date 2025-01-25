@@ -22,14 +22,11 @@ import uika806.port.CurrentPort;
 import uika806.reader.LispReaderEx;
 import uika806.reader.LispReaderFx;
 import uika806.syntax.Environ;
-import uika806.vm4.Compile4;
+import uika806.vm4.Compile5;
 import uika806.vm4.Op;
 import uika806.vm4.VM4;
 
-/**
- *
- * @author hemmi
- */
+
 public class Main {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Main.class);
@@ -37,7 +34,6 @@ public class Main {
     public static void main(String args[]) {
 
         try {
-            //     escapeTest();
             String property = System.getProperty("java.version");
             String property2 = System.getProperty("java.vendor");
             System.out.println("java.version=" + property);
@@ -51,7 +47,7 @@ public class Main {
             CurrentPort.init(false);
 
             EnvironFactory factory = new EnvironFactory();
-            factory.loadBase();
+            factory.loadBase("startup5.scm", 5);
 
             Services.environFactory = factory;
 
@@ -100,8 +96,8 @@ public class Main {
         // Compile
         //   VMLogger logger = new VM4Logger();
         VMLogger logger = null;
-        Compile4 comp = new Compile4(logger, lexEnv);
-        Op op = comp.invoke(sexp, Op.HALT);
+        Compile5 comp = new Compile5(logger);
+        Op op = comp.invoke(sexp, Op.HALT, lexEnv);
 
         // VM
         BuiltInFuncsImpl2 bu = new BuiltInFuncsImpl2();
@@ -113,7 +109,6 @@ public class Main {
         CodepointOutputPortImpl outPort = new CodepointOutputPortImpl();
         new PrinterShared().prin1(sexp, outPort);
 
-      //  osw.write(outPort.toString());
         osw.write(outPort.getAsString());
         osw.flush();
         return sexp;

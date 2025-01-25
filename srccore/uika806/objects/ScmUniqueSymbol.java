@@ -22,6 +22,8 @@
  */
 package uika806.objects;
 
+import java.util.Objects;
+
 
 /**
  *
@@ -64,13 +66,38 @@ public class ScmUniqueSymbol extends SSymbol {
             return id;
         }
     }
-
+    
     @Override
-    public String toString() {
-        return org.toString();
+    public String getReadableName() {
+        return org.getName() + "#" + super.getName();
     }
 
-    public int getSeq() {
-        return this.seq;
+    
+    @Override
+    public int hashCode() {
+
+        return Objects.hashCode(super.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        return false;
+        
+     //   final ScmUniqueSymbol other = (ScmUniqueSymbol) obj;
+     //   return Objects.equals(this.name, other.name);
+
+
     }
 }

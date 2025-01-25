@@ -6,8 +6,8 @@ package uika806.kernel;
 
 import uika806.err.LispException;
 import uika806.objects.EmptyList;
-import uika806.objects.SSymbol;
 import uika806.objects.Cell;
+import uika806.objects.Undef;
 
 /**
  *
@@ -16,7 +16,7 @@ public class RT {
 
     public static final EmptyList EOL = EmptyList.NIL;
 
-    public static Object UNDEF = SSymbol.Undefined;
+    public static Object UNDEF = Undef.Undefined;
 
     public static boolean isTail(Object o) {
         return !(o instanceof Cell);
@@ -115,7 +115,13 @@ public class RT {
         return cdr(cdr(cdr(o)));
     }
 
-
+    public static Object getClassName(Object o) {
+        if (o == null) {
+            return "null";
+        } else {
+            return o.getClass().getName();
+        }
+    }
     
     public static boolean isList(Object obj) {
         if (obj instanceof Cell) {

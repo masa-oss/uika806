@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import uika806.kernel.AFn;
 import uika806.err.LispException;
 import uika806.objects.SSymbol;
+import uika806.objects.Undef;
 import uika806.syntax.Environ;
 
 /**
@@ -33,7 +34,7 @@ public class DefineFn extends AFn {
 
             env.add(sym, arg2);
             
-            return SSymbol.Undefined;
+            return Undef.Undefined;
         }
 
         throw new LispException("Bad argument for --define4");

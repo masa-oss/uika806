@@ -13,9 +13,12 @@ import uika806.kernel.AFn;
 import uika806.kernel.RT;
 import uika806.objects.SSymbol;
 import uika806.objects.Cell;
+import uika806.objects.Undef;
 import uika806.port.CurrentPort;
 
 /**
+ *  このクラスは Compiler4.javaの時の物なので、将来的に廃止する
+ * 
  * 今のところ letrec*と同じ
  * 
  * <code>
@@ -30,6 +33,7 @@ import uika806.port.CurrentPort;
  * letrecを使うなら評価順に依存しないように、プログラマが気をつけないといけません。
  * </code>
  */
+@Deprecated
 public class LetRecMacro extends AFn implements IMacro {
 
     private static final Logger LOG = LoggerFactory.getLogger(LetRecMacro.class);
@@ -47,11 +51,12 @@ public class LetRecMacro extends AFn implements IMacro {
             val.add(RT.cadr(car));
             binds = RT.cdr(binds);
         }
-        Object var2 = arrayToCell(var);
-        Object val2 = arrayToCell(val);
+        Object var2 = arrayToCell(var);  // Cellに変換 
+        Object val2 = arrayToCell(val);  // Cellに変換
 
         return new Object[]{var2, val2};
     }
+
 
     public static Object arrayToCell(List<Object> list) {
 
@@ -87,11 +92,11 @@ public class LetRecMacro extends AFn implements IMacro {
 
         Object lambda = addSets(pair[0], pair[1], body2);
 
-        lambda = new Cell(SSymbol.LAMBDA, new Cell(pair[0], lambda));
-        LOG.info("60) λ={}", CurrentPort.printString(lambda));
+        lambda = new Cell(SSymbol.INTERNAL_LAMBDA, new Cell(pair[0], lambda));
+        LOG.info("60) λ={}", CurrentPort.printLong(lambda));
 
         Object result = new Cell(lambda, undefs);
-        LOG.info("63) result={}", CurrentPort.printString(result));
+        LOG.info("63) result={}", CurrentPort.printLong(result));
 
         return result;
     }
@@ -107,14 +112,12 @@ public class LetRecMacro extends AFn implements IMacro {
         );
     }
 
-    Object sameLengthUndef(Object list) {
+    public static Object sameLengthUndef(Object list) {
 
         if (!(list instanceof Cell)) {
             return RT.EOL;
         }
 
-        return new Cell(Boolean.FALSE, sameLengthUndef(RT.cdr(list)));
-
+        return new Cell(Undef.Undefined, sameLengthUndef(RT.cdr(list)));
     }
-
 }

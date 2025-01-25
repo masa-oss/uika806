@@ -3,7 +3,6 @@ package uika806.pico.fn;
 import uika806.err.LispException;
 import uika806.kernel.AFn;
 import uika806.objects.Cell;
-import uika806.objects.EmptyList;
 
 /**
  * clojureのnth

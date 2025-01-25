@@ -3,7 +3,7 @@ package uika806.portfn;
 import uika806.err.BadArgumentInFunctionException;
 import uika806.kernel.AFn;
 import uika806.port.OutputPort;
-import uika806.objects.SSymbol;
+import uika806.objects.Undef;
 import uika806.port.CurrentPort;
 import uika806.print.PrinterSchemeLimit;
 
@@ -42,6 +42,6 @@ public class WriteSimpleFn extends AFn {
         } else {
             throw new BadArgumentInFunctionException("Bad argument for display "+ arg1);
         }
-        return SSymbol.Undefined;
+        return Undef.Undefined;
     }
 }

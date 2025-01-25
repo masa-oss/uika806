@@ -60,17 +60,17 @@ public class LambdaMacro extends AFn implements IMacro {
                   //  Object letrec = new Cell(SSymbol.LETREC, new Cell(eRes.var  , newBody));
                     Object letrec = LETREC_M.invoke(  new Cell(eRes.var, newBody)  );
 
-                    Object expd = RT.list(SSymbol.LAMBDA, vars, letrec);
+                    Object expd = RT.list(SSymbol.INTERNAL_LAMBDA, vars, letrec);
                     
                     LOG.info("61) expd={}", CurrentPort.printString(expd));
                     
                     return expd;
                 } else {
-                    return new Cell(SSymbol.LAMBDA, new Cell(vars, res.rest));
+                    return new Cell(SSymbol.INTERNAL_LAMBDA, new Cell(vars, res.rest));
                 }
 
             } else {
-                return new Cell(SSymbol.LAMBDA, new Cell(vars, new Cell(0L, EmptyList.NIL)));
+                return new Cell(SSymbol.INTERNAL_LAMBDA, new Cell(vars, new Cell(0L, EmptyList.NIL)));
             }
         }
         throw new LispException("Syntax error at LAMBDA");
@@ -92,7 +92,7 @@ public class LambdaMacro extends AFn implements IMacro {
             
         }
 
-        public void addAll(Collection coll) {
+        public void addAll(Collection<Object> coll) {
             
             forms.addAll(coll);
         }
@@ -188,7 +188,7 @@ public class LambdaMacro extends AFn implements IMacro {
                 ExpandResult result = new ExpandResult();
                 ArrayList<Object> varAndValues = new ArrayList<>();
                 {
-                    Object lamb = RT.list(  SSymbol.LAMBDA, EmptyList.NIL, exp   );
+                    Object lamb = RT.list(SSymbol.INTERNAL_LAMBDA, EmptyList.NIL, exp   );
                     Object mv = RT.list( temp, RT.list( SSymbol.CALL_W_VALUES, lamb, SSymbol.LIST  )   );
                     
                     //   (g001    (call-with-values (lambda () expr) list))
@@ -237,7 +237,7 @@ public class LambdaMacro extends AFn implements IMacro {
 
                 Object car2 = cell2.getCar(); //fun
 
-                Object lambda = new Cell(SSymbol.LAMBDA, new Cell(cell2.getCdr(), cdr));
+                Object lambda = new Cell(SSymbol.INTERNAL_LAMBDA, new Cell(cell2.getCdr(), cdr));
 
                 return RT.list(car2, lambda);
             }

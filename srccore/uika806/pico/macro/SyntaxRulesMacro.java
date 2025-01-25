@@ -27,26 +27,13 @@ public class SyntaxRulesMacro extends AFn implements IMacro {
 
     @Override
     public String getName() {
-        return "syntax-rules";
+        return "SyntaxRulesMacro";
     }
 
     @Override
     public Object invokeWithEnv(Object arg1, Environ env) {
 
         SyntaxRules rules = new SyntaxRules(arg1, env);
-
         return rules;
     }
-    
-    
-    /*
-    public Object invoke(Object arg1) {
-
-        EnvironImpl env = new EnvironImpl();
-
-        SyntaxRules rules = new SyntaxRules(arg1, env);
-
-        return rules;
-    }
-*/
 }

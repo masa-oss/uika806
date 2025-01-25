@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import uika806.err.ReaderException;
 import uika806.objects.SChar;
-import uika806.kernel.RT;
 import uika806.objects.Ratio;
+import uika806.objects.Undef;
 
 
 public class SharpMacroReader {
@@ -100,6 +100,12 @@ public class SharpMacroReader {
                 }
                 
             }
+            case 0x3C: // #<Undef>
+            {
+                if (strcmp(str, undef)) {
+                    return Undef.Undefined;
+                }
+            }
         }
 
         throw new ReaderException("Unsupported char=" + str.get(0),
@@ -116,6 +122,9 @@ public class SharpMacroReader {
         '!', 'n', 'o', '-',   'f', 'o', 'l', 'd', '-', 'c', 'a', 's', 'e'
     };
     
+    static int[] undef = new int[]{
+        '<',   'U', 'n', 'd', 'e', 'f', '>'
+    };
     
     boolean strcmp(List<Integer> str , int[] compare) {
         

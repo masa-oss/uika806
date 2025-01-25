@@ -5,7 +5,7 @@ import uika806.print.PrinterShared;
 import uika806.kernel.AFn;
 import uika806.port.OutputPort;
 import uika806.kernel.PrintOption;
-import uika806.objects.SSymbol;
+import uika806.objects.Undef;
 import uika806.port.CurrentPort;
 
 /**
@@ -40,6 +40,6 @@ public class DisplaySmallFn extends AFn {
         } else {
             throw new BadArgumentInFunctionException("Bad argument for display "+ arg1);
         }
-        return SSymbol.Undefined;
+        return Undef.Undefined;
     }
 }

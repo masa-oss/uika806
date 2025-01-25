@@ -7,6 +7,8 @@ package uika806.small.fn;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+
+
 import uika806.kernel.AFn;
 import uika806.err.LispException;
 import uika806.kernel.RT;
@@ -25,9 +27,8 @@ import uika806.objects.U8Array;
 
 /**
  *
- * @author hemmi
  */
-public class LibBase {
+public final class LibBase {
 
     public static class AbsFn extends AFn {
 
@@ -2551,61 +2552,6 @@ public class LibBase {
     }
 
     /*
-public static class NumEqFn extends AFn {
-
-    @Override
-    public String getName() {
-        return "=";
-    }
-
-    @Override
-    public Object invoke(Object arg1, Object arg2, Object arg3) {
-        
-        return eq(arg2, arg3) && eq(arg1, arg2);
-    }
-
-    @Override
-    public Object invoke(Object arg1, Object arg2) {
-        return eq(arg1, arg2);
-    }
-
-    boolean eq(Object arg1, Object arg2) {
-
-        if (arg2 instanceof Complex) {
-            if (arg1 instanceof Complex) {
-                Complex c1 = (Complex) arg1;
-                Complex c2 = (Complex) arg2;
-                
-                return (c1.re() == c2.re()) && (c1.im()  == c2.im());
-                
-            } else if(arg1 instanceof Number) {
-                Number n1 = (Number) arg1;
-                Complex c2 = (Complex) arg2;
-                
-                return (c2.im() == 0.0) && (c2.re() == n1.doubleValue());
-            
-            } else {
-                return false;
-                
-            }
-        } else if (arg2 instanceof Number) {
-            if (arg1 instanceof Number) {
-                Number n1 = (Number) arg1;
-                Number n2 = (Number) arg2;
-                
-                return n1.doubleValue() == n2.doubleValue();
-                
-            } else {
-                return false;
-            }
-            
-        } else {
-            return false;
-        }
-
-    }
-
-}
      */
     public static class StringSymbolFn extends AFn {
 
@@ -2618,7 +2564,8 @@ public static class NumEqFn extends AFn {
         public Object invoke(Object arg1) {
 
             SString ss = (SString) arg1;
-            return new SSymbol(ss.toString(), SSymbol.NAME_SPC);
+          //  return new SSymbol(ss.toString(), SSymbol.NAME_SPC);
+            return new SSymbol(ss.toString());
         }
     }
 

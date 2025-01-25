@@ -16,6 +16,7 @@ import uika806.objects.EndOfFile;
 import uika806.objects.Ratio;
 import uika806.objects.SChar;
 import uika806.objects.SSymbol;
+import uika806.objects.Undef;
 import uika806.port.StringInputPort;
 
 /**
@@ -260,7 +261,7 @@ public class LispReaderFxTest {
 
         Tokenizer tk = newInstance(input1);
         boolean eofError = false;
-        Object eofval = new EndOfFile();
+        Object eofval = EndOfFile.INSTANCE;
         LispReaderFx instance = new LispReaderFx(tk);
         
         RuntimeException ex = null;
@@ -299,7 +300,7 @@ public class LispReaderFxTest {
 
         Tokenizer tk = newInstance(input2);
         boolean eofError = false;
-        Object eofval = new EndOfFile();
+        Object eofval = EndOfFile.INSTANCE;
         LispReaderFx instance = new LispReaderFx(tk);
         
         
@@ -322,7 +323,7 @@ public class LispReaderFxTest {
 
         Tokenizer tk = newInstance(input3);
         boolean eofError = false;
-        Object eofval = new EndOfFile();
+        Object eofval = EndOfFile.INSTANCE;
         LispReaderFx instance = new LispReaderFx(tk);
 
         Object result = instance.read(eofError, eofval);
@@ -339,7 +340,7 @@ public class LispReaderFxTest {
 
         Tokenizer tk = newInstance(input4);
         boolean eofError = false;
-        Object eofval = new EndOfFile();
+        Object eofval = EndOfFile.INSTANCE;
         LispReaderFx instance = new LispReaderFx(tk);
 
         Object result = instance.read(eofError, eofval);
@@ -348,10 +349,8 @@ public class LispReaderFxTest {
         assertTrue(result instanceof SSymbol);
     }
     
-//    final String escape2 = "\\\"line 1\\ \\t \\n \\t continued\\n\\\"" ;
     
-    
-    @Test
+    //Test
     public void testEscape2() {
         System.out.println("testEscape2 ");
 
@@ -391,7 +390,7 @@ public class LispReaderFxTest {
         
         Tokenizer tk = new Tokenizer(port);
         boolean eofError = false;
-        Object eofval = new EndOfFile();
+        Object eofval = EndOfFile.INSTANCE;
         LispReaderFx instance = new LispReaderFx(tk);
 
         Object result = instance.read(eofError, eofval);
@@ -400,4 +399,34 @@ public class LispReaderFxTest {
         assertTrue(result instanceof SString);
     }
     
+
+    public void testUndef() {
+        System.out.println("testUndef ");
+
+        Tokenizer tk = newInstance("#<Undef>");
+        boolean eofError = false;
+        Object eofval = EndOfFile.INSTANCE;
+        LispReaderFx instance = new LispReaderFx(tk);
+
+        Object result = instance.read(eofError, eofval);
+
+        System.out.println("result=" + result);
+        assertTrue(result instanceof Undef);
+    }
+
+    @Test
+    public void testMojiretsu() {
+        System.out.println("testMojiretsu ");
+
+        Tokenizer tk = newInstance("\"abc\"");
+        boolean eofError = false;
+        Object eofval = EndOfFile.INSTANCE;
+        LispReaderFx instance = new LispReaderFx(tk);
+
+        Object result = instance.read(eofError, eofval);
+
+        System.out.println("result=" + result);
+        assertTrue(result instanceof SString);
+    }
+
 }

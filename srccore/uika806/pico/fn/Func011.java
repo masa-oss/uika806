@@ -9,6 +9,7 @@ import uika806.vm4.Closure;
 import uika806.objects.Cell;
 import uika806.err.LispException;
 import uika806.objects.SSymbol;
+import uika806.objects.Undef;
 
 /**
  *
@@ -236,7 +237,7 @@ public final class Func011 {
             if (arg1 instanceof Cell) {
                 Cell cell = (Cell)arg1;
                 cell.setCar(arg2);
-                return SSymbol.Undefined;
+                return Undef.Undefined;
             }
             throw new LispException("set-car!");
         }
@@ -254,7 +255,7 @@ public final class Func011 {
             if (arg1 instanceof Cell) {
                 Cell cell = (Cell)arg1;
                 cell.setCdr(arg2);
-                return SSymbol.Undefined;
+                return Undef.Undefined;
             }
             throw new LispException("set-cdr!");
         }
@@ -304,6 +305,16 @@ public final class Func011 {
         @Override
         public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4) {
             return Numbers.add(Numbers.add(Numbers.add(arg1, arg2), arg3), arg4);
+        }
+
+        @Override
+        public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
+            return Numbers.add(Numbers.add(Numbers.add(Numbers.add(arg1, arg2), arg3), arg4), arg5);
+        }
+
+        @Override
+        public Object invoke(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6) {
+            return Numbers.add(Numbers.add(Numbers.add(Numbers.add(Numbers.add(arg1, arg2), arg3), arg4), arg5), arg6);
         }
 
     }

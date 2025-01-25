@@ -4,13 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uika806.err.LispException;
 import uika806.kernel.AFn;
-import static uika806.objects.SSymbol.LAMBDA;
 
 import uika806.objects.EmptyList;
 import uika806.kernel.RT;
 import uika806.objects.Cell;
 import uika806.port.CurrentPort;
 import static uika806.objects.SSymbol.CALL_W_VALUES;
+import static uika806.objects.SSymbol.INTERNAL_LAMBDA;
 
 /**
  * <code>
@@ -58,8 +58,8 @@ public class LetValues1Macro extends AFn implements IMacro {
                 Object param = RT.car(firstVar);
                 Object init = RT.cadr(firstVar);
 
-                Object lambda1 = RT.list(LAMBDA, EmptyList.NIL, init);
-                Object lambda2 = new Cell(LAMBDA, new Cell(param, bodys));
+                Object lambda1 = RT.list(INTERNAL_LAMBDA, EmptyList.NIL, init);
+                Object lambda2 = new Cell(INTERNAL_LAMBDA, new Cell(param, bodys));
 
                 LOG.info("lambda1={}", CurrentPort.printString(lambda1));
                 LOG.info("lambda2={}", CurrentPort.printString(lambda2));

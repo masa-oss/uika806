@@ -19,8 +19,8 @@ import uika806.kernel.RT;
 import uika806.objects.EndOfFile;
 import uika806.objects.SChar;
 import uika806.objects.SString;
-import uika806.objects.SSymbol;
 import uika806.objects.U8Array;
+import uika806.objects.Undef;
 import uika806.port.ByteVectorInputPort;
 import uika806.port.ByteVectorOutputPort;
 import uika806.port.IPort;
@@ -278,7 +278,7 @@ public class PortFns {
                 throw new BadArgumentInFunctionException("Bad argument for flush-output-port" + arg1);
             }
 
-            return SSymbol.Undefined;
+            return Undef.Undefined;
         }
     }
 

@@ -27,13 +27,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uika806.objects.Cell;
 import uika806.objects.EmptyList;
 import uika806.objects.SSymbol;
-import uika806.pico.macro.IMacro;
 import uika806.objects.SArray;
 import uika806.objects.SChar;
 import uika806.objects.SString;
@@ -44,19 +43,29 @@ import uika806.port.CurrentPort;
  * Original: com.github.chungkwong.jschememin.type.ScmSyntaxRules
  *
  */
-public class SyntaxRules implements IMacro {
+public class SyntaxRules /*implements IMacro*/ {
+    //                    ▲ 2025-01-10 remove
 
     private static final Logger LOG = LoggerFactory.getLogger(SyntaxRules.class);
 
+    //                           省略記号
     private static final SSymbol ELLIPSIS = new SSymbol("...");
     private static final SSymbol WILDCARD = new SSymbol("_");
 
-    private final List<SyntaxRule> rules = new ArrayList<>();
+    final List<SyntaxRule> rules = new ArrayList<>();
 
     private final SSymbol ellipsis;
 
     private final HashSet<SSymbol> literals = new HashSet<>();
     private final Environ defEnv;
+
+    // ▼▼ add
+    private String defineTo = "??"; //外側のdefine-syntax で定義した名前
+
+    static boolean TRACE = false;
+    // ▲▲ add
+    
+    
 
     public SyntaxRules(Object spec, Environ env) {
         /*
@@ -108,10 +117,18 @@ public class SyntaxRules implements IMacro {
     }
 
     private void addSyntaxRule(Cell rule) {
-
-        rules.add(new SyntaxRule(SUtil.getCdar(rule), SUtil.getCadr(rule)));
+        
+        Object pat = SUtil.getCdar(rule);
+        Object temp = SUtil.getCadr(rule);
+        
+        if (TRACE) {
+            LOG.info ("pat = {}",   CurrentPort.printLong(pat));
+            LOG.info ("temp = {}",    CurrentPort.printLong(temp));
+        }        
+        rules.add(new SyntaxRule(pat, temp));
     }
-/*
+
+    /*
     public String toExternalRepresentation() {
         StringBuilder buf = new StringBuilder();
         buf.append("(syntax-rules ");
@@ -123,23 +140,38 @@ public class SyntaxRules implements IMacro {
         buf.append(')');
         return buf.toString();
     }
-*/
+     */
     public Object transform(Object argument, Environ env) {
 
-        for (SyntaxRule rule : rules) {
-            Object transformed = rule.apply(argument, env);
+        LOG.info("159) *********** SyntaxRules.name ={}     start", defineTo);
+        String str0 = CurrentPort.printString(argument);
+        LOG.info("159) *********** before ={}", str0);
+        String sEnv = env.printEnv();
+        LOG.info("160) ***********      env   ={}", env.printEnv());
 
+        int idx = 0;
+        for (SyntaxRule rule : rules) {
+            if (TRACE) {
+                LOG.info("166) ------- {}  check rule[ {} ]", defineTo, idx);
+            }
+            Object transformed = rule.apply(argument, env);
             if (transformed != null) {
-                //    LOG.info("110) transformed = {}", transformed);
-                LOG.info("110) transformed = {}", CurrentPort.printString(transformed));
+
+                String str = CurrentPort.printLong(transformed);
+                LOG.info("170) *********** SyntaxRules {} ,          end,  transformed ={}", defineTo, str);
+
                 return transformed;
             }
+            idx++;
         }
-        throw new SyntaxException();
+        throw new SyntaxException("SyntaxName = "  + defineTo + ", " + str0 + ", env = " + sEnv);
     }
 
     // Line 239
     private Object transform(Object temp, HashMap<SSymbol, CapturedObjects> bind, boolean ellipsed, Environ env, MultiIndex index) {
+
+     //   LOG.info("transform enter: {}",  CurrentPort.printLong(temp)  );
+
         if (temp instanceof SSymbol) {
             return transformSymbol((SSymbol) temp, bind, env, index);
         } else if (isSelfevaluating(temp)) {
@@ -187,18 +219,39 @@ public class SyntaxRules implements IMacro {
         return buf.toList();
     }
 
+    final boolean disableLambdaConvert = false;
+
     // Line 244
     private Object transformSymbol(SSymbol temp, HashMap<SSymbol, CapturedObjects> bind, Environ env, MultiIndex index) {
 
         if (bind.containsKey(temp)) {
-            return bind.get(temp).get(index);
+            // 既に bind に登録されている時
+            //  return bind.get(temp).get(index);
+            CapturedObjects get = bind.get(temp);
+            LOG.info("229)  temp={}, get={}, index={}" , temp, get , index  );
+            Object obj = get.get(index);
+            LOG.info("232)  temp={}, obj={}" , temp, obj   );
+            return obj;
         }
+        
+        // ▼ add
+        if (disableLambdaConvert && SSymbol.LAMBDA.equals(temp)) {
+            return temp;
+        }
+        // ▲ add
+        
         Optional<Object> defVal = defEnv.getOptional(temp);
         SSymbol rename = new ScmUniqueSymbol(temp);
 
         bind.put(temp, new Rename(rename));
         if (defVal.isPresent()) {
-            env.add(rename, defVal.get());
+            
+            Object value = defVal.get();
+            
+            env.add(rename, value);
+            LOG.info("251) env.add   key={}, value={}", rename, value);
+        } else {
+            LOG.info("253) No value found in env. temp = {}", temp);
         }
         return rename;
     }
@@ -231,8 +284,40 @@ public class SyntaxRules implements IMacro {
     public SyntaxRule createRule(Object pattern, Object template) {
         return new SyntaxRule(pattern, template);
     }
+    // ▼▼ add
+    public void setName(String name) {
+        defineTo = name;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SyntaxRules[");
+        sb.append("name=");
+        sb.append(defineTo);
+
+        sb.append(", defEnv=");
+        sb.append(defEnv.toString());
+
+        sb.append(", reservedWords=");
+        sb.append(this.literals.toString());
+
+        sb.append(", # of rules = ");
+        sb.append(rules.size());
+        sb.append("]");
+        return sb.toString();
+    }
+    // ▲▲ add
 
     static boolean isSelfevaluating(Object obj) {
+        
+        if (obj instanceof Cell) {
+            return false;
+        }
+        return true;
+    }
+
+    static boolean old_isSelfevaluating(Object obj) {
 
         if (obj instanceof Number) {
             return true;
@@ -339,23 +424,91 @@ public class SyntaxRules implements IMacro {
         private boolean matchIdentifier(Object expr, SSymbol patt, HashMap<SSymbol, CapturedObjects> bind,
                 Environ env, MultiIndex index) {
 
+            boolean b = matchIdentifier2(expr, patt, bind, env, index);
+            if (TRACE) {
+                LOG.info("398) matchIdentifier({}, {})  --> {}", expr, patt, b);
+            }
+            return b;
+        }
+
+        private boolean matchIdentifier2(Object expr, SSymbol patt, HashMap<SSymbol, CapturedObjects> bind,
+                Environ env, MultiIndex index) {
+
+            if (TRACE) {
+                LOG.info("405) ------------ patt = {}", patt);
+                LOG.info("405) ------------ literals = {}", literals);
+            }
             if (literals.contains(patt)) {
-                
+
+                LOG.info("410) ------------ literals");
+
                 if (expr instanceof ScmUniqueSymbol) {
                     expr = ((ScmUniqueSymbol) expr).getOrigin();
                 }
-                 
 
-                return expr instanceof SSymbol && ((expr.equals(patt) && !defEnv.containsKey(patt) && !env.containsKey((SSymbol) expr))
+                /*
+                return expr instanceof SSymbol && 
+                        ((expr.equals(patt) && !defEnv.containsKey(patt) && !env.containsKey((SSymbol) expr))
                         || (defEnv.containsKey(patt) && env.containsKey((SSymbol) expr) && defEnv.get((SSymbol) patt).equals(env.get((SSymbol) expr))));
+                 */
+                if (expr instanceof SSymbol) {
+                    // exprとpatt (どちらもシンボル)が一致していて、どちらも環境に定義されていない
+                    boolean bool1 = (expr.equals(patt) && !defEnv.containsKey(patt) && !env.containsKey((SSymbol) expr));
+
+                    boolean bool2 = isMatchSym2(patt, env, expr);
+
+                    LOG.info("429) bool1={}, bool2={}", bool1, bool2);
+
+                    return bool1 || bool2;
+                } else {
+                    return false;
+                }
+
             } else if (patt.equals(WILDCARD)) {
+                if (TRACE) {
+                    LOG.info("435) ------------ WILDCARD");
+                }
                 return true;
             } else {
+                if (TRACE) {
+                    LOG.info("441) ------------ ELSE");
+                }
                 if (!bind.containsKey(patt)) {
                     bind.put(patt, new CapturedObjects());
                 }
                 bind.get(patt).add(index, expr);
                 return true;
+            }
+        }
+
+        private boolean isMatchSym2(SSymbol patt, Environ env, Object expr) {
+            
+            //   boolean b3 = (defEnv.containsKey(patt) && env.containsKey((SSymbol) expr) && defEnv.get((SSymbol) patt).equals(env.get((SSymbol) expr)))
+            if (TRACE) {
+                LOG.info("452) expr={}, patt={}, env={}", expr, patt, env);
+            }
+            boolean b1 = defEnv.containsKey(patt);
+            if (TRACE) {
+                LOG.info("455) b1={}", b1);
+            }
+            if (b1) {
+                boolean b2 = env.containsKey((SSymbol) expr);
+                if (TRACE) {
+                    LOG.info("459) b2={}", b2);
+                }
+                if (b2) {
+
+                    Object get1 = defEnv.get((SSymbol) patt);
+                    Object get2 = env.get((SSymbol) expr);
+                    if (TRACE) {
+                        LOG.info("465) get1={}, get2={}", get1, get2);
+                    }
+                    return get1.equals(get2);
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
         }
 
@@ -401,7 +554,16 @@ public class SyntaxRules implements IMacro {
 
         public Object apply(Object argument, Environ env) {
             HashMap<SSymbol, CapturedObjects> bind = new HashMap<>();
-            if (match(argument, pattern, bind, env, new MultiIndex())) {
+
+            boolean b = match(argument, pattern, bind, env, new MultiIndex());
+            /*        {
+                String strA = CurrentPort.printString(argument);
+                LOG.info("296) argument: {}", strA);
+                String strP = CurrentPort.printString(pattern);
+                LOG.info("296) pattern: {}", strP);
+            }  */
+
+            if (b) {
                 return transform(template, bind, false, env, new MultiIndex());
             } else {
                 return null;

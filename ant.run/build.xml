@@ -105,16 +105,9 @@
   </target>
 
 
-  <target name="pico" depends="comppico">
-   <jar jarfile="${build.dir}/uika806-pico-0.1.jar" basedir="${DEST_DIR}">
-    <manifest>
-      <attribute name="Main-Class" value="${main.class}"/>
-    </manifest>
-   </jar>
-  </target>
 
   <target name="small" depends="compsmall">
-   <jar jarfile="${build.dir}/uika806-small-0.1.jar" basedir="${DEST_DIR}">
+   <jar jarfile="${build.dir}/uika806-small-0.2.jar" basedir="${DEST_DIR}">
     <manifest>
       <attribute name="Main-Class" value="${main.class}"/>
     </manifest>

@@ -7,14 +7,11 @@ import uika806.err.LispException;
 import uika806.kernel.AFn;
 import uika806.kernel.RT;
 import uika806.objects.Cell;
-import uika806.objects.EmptyList;
 import uika806.objects.SSymbol;
 import uika806.port.CurrentPort;
-import uika806.syntax.Environ;
-import uika806.syntax.SyntaxRules;
 
 /**
- * 開発中は (*define とする
+ *  このクラスは Compiler4.javaの時の物なので、将来的に廃止する
  *
  * <code>
  * (define (bazoo x)
@@ -43,7 +40,8 @@ public class NewDefineMacro extends AFn implements IMacro {
     
     @Override
     public String getName() {
-        return "*define";
+      //  return "*define";
+        return "NewDefineMacro";
     }
 //    public Object invokeWithEnv(Object form, Environ env) {
 
@@ -105,7 +103,7 @@ public class NewDefineMacro extends AFn implements IMacro {
             // (define  (fun arg1 arg2 ...) ...
             Cell cell2 = (Cell) maybeSym;
             Object qSymbol = RT.list(SSymbol.QUOTE, cell2.getCar());
-            Object lambda = new Cell(SSymbol.LAMBDA, new Cell(cell2.getCdr(), val));
+            Object lambda = new Cell(SSymbol.INTERNAL_LAMBDA, new Cell(cell2.getCdr(), val));
 
             return RT.list(SSymbol.DEFINE4, qSymbol, lambda);
 

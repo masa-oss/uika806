@@ -41,15 +41,4 @@ public class LispException extends RuntimeException {
         LispException ex = new LispException(msg);
         return ex;
     }
-
-    
-    //2024-11-05 comment
-/*
-    @Override
-    public String getMessage() {
-
-        return "LispException[" + super.getMessage() + "]";
-
-    }
-*/
 }

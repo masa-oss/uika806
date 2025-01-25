@@ -12,7 +12,6 @@ package uika806.err;
  * ファイルの入力または出力ポートを開けないこ とによって発生したオブジェクト
  *
  */
-// public class FileException extends LispException {
 public class FileException extends RaiseException {
 
     final Throwable throwObj;

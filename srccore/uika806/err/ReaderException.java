@@ -6,10 +6,9 @@ package uika806.err;
 
 /**
  * 【開発メモ】このクラスは削除しても良いかも知れない。
- *           RaiseException の中に FileExceptionというフラグを持たせれば、事たりる。
+ *           RaiseException の中に ReaderException というフラグを持たせれば、事たりる。
  *
  */
-//public class ReaderException extends LispException {
 public class ReaderException extends RaiseException {
 
     private final int line;

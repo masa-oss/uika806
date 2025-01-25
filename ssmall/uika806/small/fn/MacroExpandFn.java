@@ -18,6 +18,11 @@ public class MacroExpandFn extends AFn {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(MacroExpandFn.class);
     
+    @Override
+    public String getName() {
+//        return "macro-expand";
+        return "MacroExpandFn";
+    }
     
     @Override
     public Object invokeWithEnv(Object arg1, Environ env) {
@@ -41,7 +46,6 @@ public class MacroExpandFn extends AFn {
                     LOG.info("invoke SyntaxRules : {}" , sr.toString());
                     
                     return sr.transform(cell.getCdr(), env);
-                 //   return sr.transform(cell, env);
                     
                 }
                 if (get instanceof AFn) {
@@ -51,17 +55,30 @@ public class MacroExpandFn extends AFn {
                 }
                 
                 
-                throw new LispException("Is not a SyntaxRules : " + sym.toString());
+                throw new LispException("Is not a SyntaxRules : " + sym.toString() + ", value = " + get);
             }
-            throw new BadArgumentInFunctionException("macro-expand");
+            throw new BadArgumentInFunctionException("-mex");
         }
-        throw new BadArgumentInFunctionException("macro-expand");
+        throw new BadArgumentInFunctionException("-mexp");
     }
+
 
 
     @Override
-    public String getName() {
-        return "macro-expand";
+    public Object invokeWithEnv(Object arg1, Object arg2, Environ env) {
+        
+        if (! (arg1 instanceof SyntaxRules) ) {
+            throw new BadArgumentInFunctionException("-mexp");
+        }
+    
+        SyntaxRules sr = (SyntaxRules) arg1;
+        
+        Object res = sr.transform(arg2, env);
+        
+        return res;
     }
     
+
+
+
 }

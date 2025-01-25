@@ -7,27 +7,48 @@ package uika806.objects;
 import java.util.Objects;
 
 /**
- * VM3を削減
- *
+ * Symbol object.
  */
 public class SSymbol {
 
-    public static final SSymbol VV = new SSymbol("V");   // Compiler4が利用
+ //   public static final SSymbol Undefined = new SSymbol("Undefined");
     
+    
+    public static final SSymbol VV = new SSymbol("V");   // Compile4 or Compile5 が利用
+    
+
+    public static SSymbol SYN_DOT = new SSymbol("...");  // syntax-rule
+    public static SSymbol SYN_GT = new SSymbol("=>");  // syntax-rule
+    public static SSymbol SYN_ELSE = new SSymbol("else");  // syntax-rule
     
     // ********************** COMPILER **********************
 
     public static SSymbol QUOTE = new SSymbol("quote");
 
-//    public static SSymbol LAMBDA = new SSymbol("lambda");
-    public static SSymbol LAMBDA = new SSymbol("-λ");
+    public static SSymbol INTERNAL_LAMBDA = new SSymbol("-λ");
 
-//    public static SSymbol UP_LAMBDA = new SSymbol("LAMBDA");
-    public static SSymbol UP_LAMBDA = new SSymbol("lambda");
+    public static SSymbol LAMBDA = new SSymbol("lambda");
     
     
-    public static SSymbol G_LAMBDA = new SSymbol("λ");
+  //  public static SSymbol G_LAMBDA = new SSymbol("λ");
+    
+    
     public static SSymbol LETREC = new SSymbol("letrec");
+    public static SSymbol LETREC_SYNTAX = new SSymbol("letrec-syntax");
+
+    public static SSymbol SLETREC_SYNTAX = new SSymbol("*letrec-syntax");
+    
+    
+    public static SSymbol HLETREC = new SSymbol("-letrec");
+
+
+    public static SSymbol LET = new SSymbol("let");
+    public static SSymbol LET_SYNTAX = new SSymbol("let-syntax");
+    
+    public static SSymbol LET_VALUES = new SSymbol("let-values");
+    
+    public static SSymbol HLET = new SSymbol("-let");
+    
     
     public static SSymbol IF = new SSymbol("if");
 
@@ -38,7 +59,61 @@ public class SSymbol {
 
     public static SSymbol MACRO_DEF = new SSymbol("macrodef");
 
-    // ** package **
+    public static SSymbol WITH_EXCEPTION = new SSymbol("with-exception-handler");
+    
+    
+    // ******************** macro
+    
+    public static SSymbol SDEFINE = new SSymbol("*define");
+    
+    public static SSymbol DEFINE4 = new SSymbol("--define4");
+
+    public static SSymbol DEFINE = new SSymbol("define");
+    
+    public static SSymbol DEFINE_VALUES = new SSymbol("define-values");
+
+    public static SSymbol DEFINE_RECORD_TYPE = new SSymbol("define-record-type");
+
+    public static SSymbol AND = new SSymbol("and");
+    
+    public static final String NAME_SPC = "scheme";
+    
+    
+    public static SSymbol IMPORT = new SSymbol("import" );
+    public static SSymbol SIMPORT = new SSymbol("*import" );
+    
+
+
+    // Compile Ver4
+    public static SSymbol sApply = new SSymbol("apply");
+
+    // Compile Ver5
+    public static SSymbol S_APPLY = new SSymbol("*apply");
+    
+    
+    
+
+
+    public static SSymbol SBEGIN = new SSymbol("*begin");
+    
+    public static SSymbol CALL_W_VALUES = new SSymbol("call-with-values");
+
+    // macro
+    public static SSymbol SYNTAX_RULES = new SSymbol("syntax-rules");
+    
+    // macro
+    public static SSymbol DEFINE_SYNTAX = new SSymbol("define-syntax");
+    
+
+    // *****
+
+    // function
+    public static SSymbol SDEF_MACRO = new SSymbol("*defmacro");
+    
+    public static SSymbol TEST_VALUES = new SSymbol("test-values");
+    
+    
+    // ******************** package ********************
     
     public static final SSymbol LIB_UIKA806 = new SSymbol("uika806");
     public static final SSymbol LIB_TEST = new SSymbol("test");
@@ -87,95 +162,25 @@ public class SSymbol {
     public static final SSymbol LIB_CXR = new SSymbol("cxr");
     
     
-    // ******************** macro
     
-    public static SSymbol SDEFINE = new SSymbol("*define");
-    
-    public static SSymbol DEFINE4 = new SSymbol("--define4");
-
-    public static SSymbol DEFINE = new SSymbol("define");
-    
-    public static SSymbol DEFINE_VALUES = new SSymbol("define-values");
-
-    public static SSymbol DEFINE_RECORD_TYPE = new SSymbol("define-record-type");
-
-    public static SSymbol AND = new SSymbol("and");
-/*
- 
-    */
-    
-    public static final String NAME_SPC = "scheme";
-    
-    
-    public static SSymbol IMPORT = new SSymbol("import", NAME_SPC);
-    public static SSymbol SIMPORT = new SSymbol("*import", NAME_SPC);
-    
-    
-    public static SSymbol NOT = new SSymbol("not", NAME_SPC);
-
-    // add Original
- //   public static SSymbol ELSE = new SSymbol("else", NAME_SPC);
-
-    // add Original
-//    public static SSymbol MEMV = new SSymbol("memv", NAME_SPC);
-
-    // add Original
- //   public static SSymbol LET = new SSymbol("let", NAME_SPC);
-
- //   public static SSymbol LET_STAR = new SSymbol("let*", NAME_SPC);
-
-    // add Original
- //   public static SSymbol BEGIN = new SSymbol("begin", NAME_SPC);
-
-    // add Original
-    public static SSymbol sApply = new SSymbol("apply", NAME_SPC);
-
-    public static SSymbol WITH_EXCEPTION = new SSymbol("with-exception-handler", NAME_SPC);
-    
-    public static SSymbol LET_VALUES = new SSymbol("let-values", NAME_SPC);
-
-
-    public static SSymbol SBEGIN = new SSymbol("*begin", NAME_SPC);
-    
-    public static SSymbol CALL_W_VALUES = new SSymbol("call-with-values", NAME_SPC);
-
-    // macro
-    public static SSymbol SYNTAX_RULES = new SSymbol("syntax-rules", NAME_SPC);
-    
-    // macro
-    public static SSymbol DEFINE_SYNTAX = new SSymbol("define-syntax", NAME_SPC);
-    
-
-    // function
-    public static SSymbol SDEF_MACRO = new SSymbol("*defmacro", NAME_SPC);
-    
-    public static SSymbol TEST_VALUES = new SSymbol("test-values", NAME_SPC);
-    
-    public static SSymbol EQV = new SSymbol("eqv?", NAME_SPC);
+    public static SSymbol EQV = new SSymbol("eqv?");
 
     
     public static SSymbol NTH = new SSymbol("nth");
     
     
+    public static SSymbol NOT = new SSymbol("not");
     
-    public static SSymbol REPORT_TEST = new SSymbol("*report-test", NAME_SPC);
+    
+    public static SSymbol REPORT_TEST = new SSymbol("*report-test");
 
     
-    // *****
 
-//    public static SSymbol MUL = new SSymbol("*");
-//    public static SSymbol ADD = new SSymbol("+");
-//    public static SSymbol SUB = new SSymbol("-");
 
-    public static SSymbol SYN_DOT = new SSymbol("...");  // syntax-rule
-
-//    public static SSymbol DIV = new SSymbol("/");
 
     public static SSymbol LT = new SSymbol("<");
     public static SSymbol GT = new SSymbol(">");
 
-    public static SSymbol SYN_GT = new SSymbol("=>");  // syntax-rule
-    public static SSymbol SYN_ELSE = new SSymbol("else");  // syntax-rule
 
     
     public static SSymbol BY_VEC = new SSymbol("bytevector");
@@ -224,7 +229,6 @@ public class SSymbol {
 
     public static final SSymbol CONS = new SSymbol("cons");
 
-    public static final SSymbol Undefined = new SSymbol("Undefined");
     
     
     // *** FEATURES ***
@@ -241,86 +245,61 @@ public class SSymbol {
         
     // **********************************************************
     
-  //  private final int opcode;
- //   private final String pkg;
-    private final String name;
-
-
-    /**
-     * Creates a new instance
-     *
-     * @param name
-     * @param pkgName
-     */
+    protected final String name;
+/*
+    @Deprecated
     public SSymbol(String name, String pkgName) {
 
         if (name == null) {
             throw new NullPointerException();
         }
         this.name = name;
-    //    this.pkg = pkgName;
-   //     this.opcode = -1;
     }
-
-
+*/
+    /**
+     * Creates a new instance
+     *
+     * @param name
+     */
     public SSymbol(String name) {
 
         if (name == null) {
             throw new NullPointerException();
         }
         this.name = name;
-   //     this.pkg = "scheme";
-    //    this.opcode = -1;
     }
 
 
-/*
-    public SSymbol(String name, int opcode ) {
-
-        if (name == null) {
-            throw new NullPointerException();
-        }
-        this.name = name;
-        this.opcode = opcode;
-    }
-*/
     
     static int genSymCount = 10;
 
     
-//    public static Object gensym() {
     public static SSymbol gensym() {
 
         genSymCount++;
-        return new SSymbol("G" + genSymCount, "vm");
+        return new SSymbol("G" + genSymCount);
     }
-
-     
-    
-    
     
     public final String getName() {
         return name;
     }
-/*
-    public final String getPackageName() {
-      //  return pkg;
-        return "scheme";
-    }
-  */  
     
     @Override
     public String toString() {
         return "SSymbol[" +  name + "]";
     }
-
-
+    
+    
+    public String getReadableName() {
+        return name;
+    }
+    
+    
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 19 * hash + Objects.hashCode(this.name);
-        return hash;
+
+        return Objects.hashCode(this.name);
     }
 
     @Override
@@ -337,7 +316,5 @@ public class SSymbol {
         final SSymbol other = (SSymbol) obj;
         return Objects.equals(this.name, other.name);
     }
-    
-    
     
 }

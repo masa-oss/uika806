@@ -37,7 +37,6 @@ public class SimpleOpPrettyPrinter {
             case 11:
             case 12:
                // 引数なし
-             //   outport.writeString(")");
                 outport.write(")");
                 break;
             case 7:
@@ -45,7 +44,7 @@ public class SimpleOpPrettyPrinter {
             case 14: // push
             case 15: // EXCEP_HN
             case 19: // VALS_LIST
-               // nextのみ
+                // nextのみ
                 outport.write( "\n");
                 printIndentList(op.nextOp, outport, space  );
                 outport.write(")");
@@ -114,7 +113,12 @@ public class SimpleOpPrettyPrinter {
         SSymbol a = sym;
         if (a instanceof ScmUniqueSymbol) {
             ScmUniqueSymbol uni = (ScmUniqueSymbol) a;
-            return uni.getOrigin().getName() + "#" + uni.getSeq();
+          //  return uni.getOrigin().getName() + "#" + uni.getSeq();
+            
+          //  return "ScmUniqueSymbol " + uni.getOrigin().getName();
+          
+          // 2025-01-XX
+          return uni.getReadableName();
         }
         
         return a.getName();

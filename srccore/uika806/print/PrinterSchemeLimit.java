@@ -4,6 +4,8 @@
  */
 package uika806.print;
 
+import uika806.kernel.PrintOption;
+import uika806.kernel.SelfPrintable;
 import uika806.objects.SSymbol;
 import uika806.objects.EmptyList;
 import uika806.objects.Cell;
@@ -80,6 +82,15 @@ public final class PrinterSchemeLimit {
                 return helper.printAtom(atom);
             }
 
+        } else if (sexp instanceof SelfPrintable) {
+            // add 2025-01-xx
+            SelfPrintable sp = (SelfPrintable) sexp;
+            
+            StringOutputPort outport = new StringOutputPort();
+            
+            sp.prin1(outport, PrintOption.WRITE);
+            return outport.getAsString();
+            
         } else if (sexp instanceof Cell) {
             Cell cell = (Cell) sexp;
             StringBuilder sb = new StringBuilder();
@@ -136,7 +147,8 @@ public final class PrinterSchemeLimit {
                 StringOutputPort outport = new StringOutputPort();
                 PrintUtil.printStringReadably((SString) sexp, outport);
 
-                return outport.toString();
+             //   return outport.toString();
+                return outport.getAsString(); // FIX
             }
             
             

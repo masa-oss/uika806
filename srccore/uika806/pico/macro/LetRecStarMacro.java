@@ -16,6 +16,7 @@ import uika806.objects.Cell;
 import uika806.port.CurrentPort;
 
 /**
+ *  このクラスは Compiler4.javaの時の物なので、将来的に廃止する
  * 今のところ letrecと同じ
  * 
  * <code>
@@ -84,7 +85,7 @@ public class LetRecStarMacro extends AFn implements IMacro {
 
         Object lambda = addSets(pair[0], pair[1], body2);
 
-        lambda = new Cell(SSymbol.LAMBDA, new Cell(pair[0], lambda));
+        lambda = new Cell(SSymbol.INTERNAL_LAMBDA, new Cell(pair[0], lambda));
         LOG.info("60) λ={}", CurrentPort.printString(lambda));
 
         Object result = new Cell(lambda, undefs);

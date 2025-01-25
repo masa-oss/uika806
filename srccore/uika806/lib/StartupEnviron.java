@@ -74,7 +74,7 @@ public class StartupEnviron implements Environ {
 
     @Override
     public void set(SSymbol id, Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -118,7 +118,6 @@ public class StartupEnviron implements Environ {
     @Override
     public Object lookupValue(SSymbol sym) {
         throw new UnsupportedOperationException("Not supported yet.");
-        // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override

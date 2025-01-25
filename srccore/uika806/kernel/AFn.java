@@ -18,11 +18,6 @@ import uika806.objects.Cell;
 public abstract class AFn implements Runnable {
 
     public abstract String getName();
-/*
-    public String getName() {
-        return "??func??";
-    }
-  */
     
     
     

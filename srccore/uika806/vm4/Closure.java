@@ -12,7 +12,6 @@ import uika806.kernel.SelfPrintable;
 
 /**
  *
- * @author hemmi
  */
 public final class Closure implements SelfPrintable {
 

@@ -7,14 +7,17 @@ import uika806.objects.Cell;
 import uika806.objects.SSymbol;
 
 /**
- *
+ *  このクラスは Compiler4.javaの時の物なので、将来的に廃止する
+ * 
  * This macro is used in VM.java .
  */
+@Deprecated
 public class DefineV4Macro extends AFn implements IMacro {
 
     @Override
     public String getName() {
-        return "define";
+//        return "define";
+        return "DefineV4Macro";
     }
 
     @Override
@@ -34,7 +37,7 @@ public class DefineV4Macro extends AFn implements IMacro {
                 // (define  (fun arg1 arg2 ...) ...
                 Cell cell2 = (Cell) maybeSym;
                 Object qSymbol = RT.list(SSymbol.QUOTE, cell2.getCar());
-                Object lambda = new Cell(SSymbol.LAMBDA, new Cell(cell2.getCdr(), val));
+                Object lambda = new Cell(SSymbol.INTERNAL_LAMBDA, new Cell(cell2.getCdr(), val));
                 
                 return RT.list(SSymbol.DEFINE4, qSymbol, lambda);
 

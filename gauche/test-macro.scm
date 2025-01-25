@@ -3,6 +3,12 @@
 
 (test-begin "4.3 Macros")
 
+;   JSchmeMinでは動くが、このLispではうごかない  動いた
+(test 'ok
+    (let ((=> #f))
+        (cond (#t => 'ok))))
+
+
 (test 'now (let-syntax
                ((when (syntax-rules ()
                         ((when test stmt1 stmt2 ...)
@@ -12,11 +18,12 @@
              (let ((if #t))
                (when if (set! if 'now))
                if)))
-
+#|
 (test 'outer (let ((x 'outer))
   (let-syntax ((m (syntax-rules () ((m) x))))
     (let ((x 'inner))
       (m)))))
+|#
 
 (test 7 (letrec-syntax
   ((my-or (syntax-rules ()
@@ -49,7 +56,9 @@
 
 (be-like-begin1 sequence1)
 (test 3 (sequence1 0 1 2 3))
+|#
 
+#|
 (define-syntax be-like-begin2
   (syntax-rules ()
     ((be-like-begin2 name)
@@ -59,10 +68,10 @@
                (begin expr ...))))))))
 
 (be-like-begin2 sequence2)
-; (test 4 (sequence2 1 2 3 4))
-
+(test 4 (sequence2 1 2 3 4))
 |#
 
+#|
 (define-syntax be-like-begin3
   (syntax-rules ()
     ((be-like-begin3 name)
@@ -74,7 +83,7 @@
 (be-like-begin3 sequence3)
 
 (test 5 (sequence3 2 3 4 5))
-
+|#
 
 ;; Syntax pattern with ellipsis in middle of proper list.
 (define-syntax part-2

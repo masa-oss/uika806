@@ -1,14 +1,10 @@
+/**
+ * SPDX-License-Identifier: MPL-2.0
+ * Author:  Masahito Hemmi.
+ */
 package uika806.objects;
 
-/**
- * Created on 2008/07/19(SAT), 4:56
- * 
- * Rename CommonLispSymbol to EmptyList at 2024-08
- * 
- * Move uika806.kernel to uika806.small.objects
- *
- * @author masa
- */
+
 public final class EmptyList  {
     
     public static final EmptyList NIL = new EmptyList("nil", "lisp");
@@ -27,12 +23,6 @@ public final class EmptyList  {
      
         this.name = name;
         this.pkg = pkg;
-/*     
-        if ("lisp".equals(pkg)) {
-            if ("nil".equals(name)) {
-            }
-        }
-*/
     }
     
     // カレントパッケージを求めるのに使っている

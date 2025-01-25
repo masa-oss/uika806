@@ -24,6 +24,7 @@
 package uika806.syntax;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -60,6 +61,7 @@ public class CapturedObjects {
 
     public Object get(MultiIndex index) {
         
+        
         Object toSearch = objects;
         for (Integer i : index.getIndices()) {
             toSearch = ((List) toSearch).get(i);
@@ -67,4 +69,10 @@ public class CapturedObjects {
         return toSearch;
     }
 
+    
+    public List<Object> getUnmodifiableList() {
+        
+        return Collections.unmodifiableList(objects);
+    }
+    
 }

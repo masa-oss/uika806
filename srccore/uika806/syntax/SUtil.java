@@ -9,7 +9,6 @@ import uika806.objects.EmptyList;
 
 /**
  *
- * @author henmi
  */
 public class SUtil {
 

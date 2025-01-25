@@ -4,22 +4,24 @@
  */
 package uika806.small.env;
 
-//import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.LoggerFactory;
+
 import uika806.err.LispException;
+import uika806.err.RaiseException;
+import uika806.lib.Library;
 import uika806.kernel.RT;
 import uika806.objects.Cell;
-import uika806.pico.fn.SimportFn;
+import uika806.objects.EmptyList;
 import uika806.objects.SSymbol;
-import uika806.lib.Library;
 import uika806.port.CurrentPort;
+import uika806.pico.fn.SimportFn;
 
 import uika806.syntax.Environ;
 import uika806.syntax.SchemeEnvironment;
 
 /**
  *
- * @author hemmi
  */
 public class EnvironFactory implements IEnvironFacory {
 
@@ -31,17 +33,15 @@ public class EnvironFactory implements IEnvironFacory {
 
     }
 
-    public void loadBase() {
-        loadBase("startup.scm");
-    }
-
-    public void loadBase(String fileName) {
+    public void loadBase(String fileName, int version) {
 
         // ライブラリ baseを作成する
-        Library schemeBase = InitLibs.initBase();
+        Library schemeBase = InitLibs.initBase(version);
 
         // ▼▼▼▼   "startup.scm"を、読み込むための、環境を作成する
         Environ startEnv = schemeBase.getStartupEnvment();
+        
+        
         startEnv.define(SSymbol.SIMPORT, new SimportFn());
 
         final Object SCHEME_BASE = RT.list(RT.list(SSymbol.LIB_SCHEME, SSymbol.LIB_BASE));
@@ -51,6 +51,14 @@ public class EnvironFactory implements IEnvironFacory {
 
         try {
             new Loader().load(fileName, startEnv);
+            
+        } catch (RaiseException rai) {
+            
+            Object errorInfo = rai.getArgument();
+            LOG.error("59) #########################  {}", CurrentPort.printString(errorInfo));
+            
+            throw new LispException("Can't load " + fileName);
+            
         } catch (Exception ex) {
             throw new LispException("can't load " + fileName, ex);
         }
@@ -82,52 +90,7 @@ public class EnvironFactory implements IEnvironFacory {
         lexEnv = new SchemeEnvironment(true);
         new SimportFn().invokeWithEnv(SCHEME_BASE, lexEnv);
     }
-/*
-    eprecated
-    public void old_loadBase(String fileName) {
 
-        lexEnv = new SchemeEnvironment(true);
-
-        lexEnv.add(SSymbol.SIMPORT, new SimportFn());
-
-        Library schemeBase = InitLibs.initBase();
-
-        boolean bBase = true;
-        if (bBase) {
-            Object list = RT.list(RT.list(SSymbol.LIB_SCHEME, SSymbol.LIB_BASE));
-            new SimportFn().invokeWithEnv(list, lexEnv);
-        }
-
-        try {
-
-            new Loader().load(fileName, lexEnv);
-        } catch (Exception ex) {
-            throw new LispException("can't load " + fileName, ex);
-            //  LOG.info("--------- Exception", ex);
-        }
-
-        InitLibs.initChar();
-
-        InitLibs.initComplex();
-
-        InitLibs.initCxr();
-        InitLibs.initInexact();
-
-        InitLibs.initFile();
-
-        InitLibs.initProcessContext();
-        InitLibs.initTime();
-
-        InitLibs.initRead();
-
-        InitLibs.initWrite();
-
-        InitLibs.initLoad();
-
-        InitLibs.initUika806Test();
-
-    }
-*/
     public Environ getFirstEnviron(boolean bProcess, boolean bWrite) {
 
         if (bProcess) {

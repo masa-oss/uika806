@@ -289,7 +289,9 @@ public final class Op {
         SSymbol a = sym;
         if (a instanceof ScmUniqueSymbol) {
             ScmUniqueSymbol uni = (ScmUniqueSymbol) a;
-            return uni.getOrigin().getName() + "#" + uni.getSeq();
+       //     return uni.getOrigin().getName() + "#" + uni.getSeq();
+            // 2024-01-02
+            return "ScmUniqueSymbol " +    uni.getOrigin().getName() ;
         }
         
         return a.getName();

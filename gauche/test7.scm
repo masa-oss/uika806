@@ -1,4 +1,5 @@
 (import (uika806 test))
+(import (scheme char))
 
 
 (test-begin "6.4 Lists")

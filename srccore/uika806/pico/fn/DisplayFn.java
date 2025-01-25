@@ -11,6 +11,7 @@ import uika806.print.PrinterSchemeEx;
 
 import uika806.port.CurrentPort;
 import uika806.objects.SString;
+import uika806.objects.Undef;
 import uika806.port.OutputPort;
 
 /**
@@ -51,7 +52,7 @@ public class DisplayFn extends AFn  {
         } catch (IOException ioe) {
             throw new RuntimeException("IOException", ioe);
         }
-        return SSymbol.Undefined;
+        return Undef.Undefined;
     }
     
     PrinterSchemeEx printLogic = new PrinterSchemeEx();
@@ -69,7 +70,7 @@ public class DisplayFn extends AFn  {
             throw LispException.illegalArgument("Bad argument for display", arg1);
         }
         
-        return SSymbol.Undefined;
+        return Undef.Undefined;
 
     }
     

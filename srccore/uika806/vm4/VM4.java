@@ -69,7 +69,6 @@ public class VM4 {
                     Op xx = x.nextOp;
                     Object val = e.get(var);
                     if (val == null) {
-                        //throw new LispException("Unbound variable " + var);
                         throw new UnboundException( var, e);
                     }
                     a = val;
@@ -243,8 +242,13 @@ public class VM4 {
                             throw new LispException("243) can not invoke : " + strA);
                             
                         }
+                        if (a instanceof SSymbol) {
+                            SSymbol syma = (SSymbol) a;
+                            throw new LispException("247) can not invoke : " + syma);
+                            
+                        }
                         String decA = (a == null) ? "null" : a.getClass().getName();
-                        throw new LispException("247) can not invoke : " + decA);
+                        throw new LispException("251) can not invoke : " + decA);
                     }
 
             

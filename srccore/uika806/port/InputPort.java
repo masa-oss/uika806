@@ -7,9 +7,6 @@ package uika806.port;
 /**
  *   LispReaderが文字を読むためのストリーム
  *
- * rename CharacterInputStream to InputPort
- *
- *  Move uika806.fn011.reader  to uika806.small.port
  */
 public interface InputPort extends IPort {
     

@@ -34,6 +34,13 @@ public final class CurrentPort {
         return pr.prin1(obj);
     }
 
+    static PrinterSchemeLimit prLong = new PrinterSchemeLimit(100, 100);
+    
+    public static String printLong(Object obj) {
+        return prLong.prin1(obj);
+    }
+    
+    
     public static void init(boolean reverse) throws IOException {
 
         PrintStream out = System.err;

@@ -5,7 +5,7 @@ import uika806.print.PrinterShared;
 import uika806.kernel.AFn;
 import uika806.port.OutputPort;
 import uika806.kernel.PrintOption;
-import uika806.objects.SSymbol;
+import uika806.objects.Undef;
 import uika806.port.CurrentPort;
 
 /**
@@ -38,8 +38,8 @@ public class WriteSmallFn extends AFn {
             cop.flush();
 
         } else {
-            throw new BadArgumentInFunctionException("Bad argument for display "+ arg1);
+            throw new BadArgumentInFunctionException("Bad argument for write "+ arg1);
         }
-        return SSymbol.Undefined;
+        return Undef.Undefined;
     }
 }
