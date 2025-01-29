@@ -15,7 +15,8 @@ This is a scheme interpreter that I wrote for my hobby, written in Java.
 
 The following Japanese e-book is written about this interpreter.
 
-『[はじめてのscheme制作](https://zenn.dev/clazz/books/a752b62f7b5e64)』([Zenn Books](https://zenn.dev/books))
+『[はじめてのscheme制作](https://zenn.dev/clazz/books/a752b62f7b5e64)』
+『[はじめてのscheme制作  Ⅱ]( https://zenn.dev/clazz/books/220ee37670b7ec )』([Zenn Books](https://zenn.dev/books))
 
 
 
