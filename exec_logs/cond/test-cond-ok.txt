@@ -1,0 +1,168 @@
+ (let ((=> #f))
+        (cond (#t => 'ok)))
+を実行して okが返って来る場合（正常時）
+
+
+
+INFO uika806.gui5.JPanelV5 ***************************************************
+INFO uika806.gui5.JPanelV5 str =  (let ((=> #f))
+        (cond (#t => 'ok))))
+INFO uika806.vm4.vm5.HletHelper 36) SyntaxRules[name=SSymbol[--let], defEnv=uika806.lib.StartupEnviron@5d908d47, reservedWords=[], # of rules = 2]
+INFO uika806.vm4.vm5.HletHelper 44) (let ((=> #f)) (cond (#t => (quote ok))))
+INFO uika806.syntax.SyntaxRules 159) *********** SyntaxRules.name =SSymbol[--let]     start
+INFO uika806.syntax.SyntaxRules 159) *********** before =(((=> #f)) (cond (#t => (quote ok))))
+INFO uika806.syntax.SyntaxRules 160) ***********      env   =SchemeEnvironment:global@044d0e900
+INFO uika806.syntax.SyntaxRules 251) env.add   key=SSymbol[52], value=uika806.pico.macro.LambdaMacro@3bcd05cb
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[name], get=uika806.syntax.CapturedObjects@5a3d97aa, index=uika806.syntax.MultiIndex@498
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[name], obj=SSymbol[=>]
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[name], get=uika806.syntax.CapturedObjects@5a3d97aa, index=uika806.syntax.MultiIndex@499
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[body1], get=uika806.syntax.CapturedObjects@55e9438, index=uika806.syntax.MultiIndex@f6
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[body1], obj=(Cell 5fb99c93)
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[body2], get=uika806.syntax.CapturedObjects@1c62f68d, index=uika806.syntax.MultiIndex@498
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[val], get=uika806.syntax.CapturedObjects@2a54a26c, index=uika806.syntax.MultiIndex@498
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[val], obj=false
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[val], get=uika806.syntax.CapturedObjects@2a54a26c, index=uika806.syntax.MultiIndex@499
+INFO uika806.syntax.SyntaxRules 170) *********** SyntaxRules SSymbol[--let] ,          end,  transformed =((lambda#52 (=>) (cond (#t => (quote ok)))) #f)
+INFO uika806.vm4.vm5.HletHelper 48) ((lambda#52 (=>) (cond (#t => (quote ok)))) #f)
+INFO uika806.vm4.vm5.HletHelper 106) sym= SSymbol[lambda]
+INFO uika806.vm4.vm5.HletHelper 59) (=>)
+DEBUG uika806.syntax.SchemeEnvironment   ********** extend (=>), (#<Undef>)
+DEBUG uika806.syntax.SchemeEnvironment ********** newEnv= uika806.syntax.SchemeEnvironment@5bda0c4a
+INFO uika806.vm4.Compile5 141) $$$$$$$$$  JIKKENTEKI let   newEnv=SchemeEnvironment[ =>=Undef[] ]@05bda0c4a
+INFO uika806.pico.macro.LambdaMacro 41) res.size=0
+INFO uika806.pico.macro.LambdaMacro 42) res.rest=((cond (#t => (quote ok))))
+INFO uika806.syntax.SyntaxRules 159) *********** SyntaxRules.name =SSymbol[cond]     start
+INFO uika806.syntax.SyntaxRules 159) *********** before =((#t => (quote ok)))
+INFO uika806.syntax.SyntaxRules 160) ***********      env   =SchemeEnvironment[ =>=Undef[] ]@05bda0c4a
+INFO uika806.syntax.SyntaxRules 410) ------------ literals
+INFO uika806.syntax.SyntaxRules 410) ------------ literals
+INFO uika806.syntax.SyntaxRules 429) bool1=false, bool2=false
+INFO uika806.syntax.SyntaxRules 410) ------------ literals
+INFO uika806.syntax.SyntaxRules 429) bool1=false, bool2=false
+INFO uika806.syntax.SyntaxRules 251) env.add   key=SSymbol[53], value=SpecialOperator[if]
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[test], get=uika806.syntax.CapturedObjects@48945ea6, index=uika806.syntax.MultiIndex@f6
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[test], obj=true
+INFO uika806.syntax.SyntaxRules 251) env.add   key=SSymbol[54], value=SyntaxRules[name=SSymbol[begin], defEnv=uika806.lib.StartupEnviron@5d908d47, reservedWords=[], # of rules = 1]
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[result1], get=uika806.syntax.CapturedObjects@43c91fa7, index=uika806.syntax.MultiIndex@f6
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[result1], obj=SSymbol[=>]
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[result2], get=uika806.syntax.CapturedObjects@4c018270, index=uika806.syntax.MultiIndex@498
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[result2], obj=(Cell 47326fe6)
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[result2], get=uika806.syntax.CapturedObjects@4c018270, index=uika806.syntax.MultiIndex@499
+INFO uika806.syntax.SyntaxRules 170) *********** SyntaxRules SSymbol[cond] ,          end,  transformed =(if#53 #t (begin#54 => (quote ok)))
+INFO uika806.syntax.SyntaxRules 159) *********** SyntaxRules.name =SSymbol[begin]     start
+INFO uika806.syntax.SyntaxRules 159) *********** before =(=> (quote ok))
+INFO uika806.syntax.SyntaxRules 160) ***********      env   =SchemeEnvironment[ =>=Undef[], if#53=SpecialOperator[if], begin#54=SyntaxRules[name=SSymbol[begin], defEnv=uika806.lib.StartupEnviron@5d908d47, reservedWords=[], # of rules = 1] ]@05bda0c4a
+INFO uika806.syntax.SyntaxRules 251) env.add   key=SSymbol[55], value=uika806.pico.macro.LambdaMacro@3bcd05cb
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[exp], get=uika806.syntax.CapturedObjects@2db978c8, index=uika806.syntax.MultiIndex@498
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[exp], obj=SSymbol[=>]
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[exp], get=uika806.syntax.CapturedObjects@2db978c8, index=uika806.syntax.MultiIndex@499
+INFO uika806.syntax.SyntaxRules 232)  temp=SSymbol[exp], obj=(Cell 47326fe6)
+INFO uika806.syntax.SyntaxRules 229)  temp=SSymbol[exp], get=uika806.syntax.CapturedObjects@2db978c8, index=uika806.syntax.MultiIndex@49a
+INFO uika806.syntax.SyntaxRules 170) *********** SyntaxRules SSymbol[begin] ,          end,  transformed =((lambda#55 () => (quote ok)))
+INFO uika806.pico.macro.LambdaMacro 41) res.size=0
+INFO uika806.pico.macro.LambdaMacro 42) res.rest=(=> (quote ok))
+INFO uika806.gui5.JPanelV5 173) (FRAME @ 0324d643e
+  (HALT)
+  (CONSTANT
+    #f
+    (ARGUMENT
+      (CLOSE
+        (=>)
+        (CONSTANT
+          #t
+          (TEST
+            (CLOSE
+              ()
+              (REFER @ 054d43587 =>
+                (CONSTANT
+                  ok
+                  (RETURN @ 04130d874)))
+              (APPLY)
+            (CONSTANT
+              ()
+              (RETURN @ 00473c41d)))
+        (APPLY)))
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : ()
+INFO uika806.vm4.VM4 IN: expr : FRAME @ 0324d643e
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment:global@044d0e900
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=null
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : ()
+INFO uika806.vm4.VM4 IN: expr : CONSTANT #f
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment:global@044d0e900
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : #f
+INFO uika806.vm4.VM4 IN: expr : ARGUMENT
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment:global@044d0e900
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : #f
+INFO uika806.vm4.VM4 IN: expr : CLOSE (=>)
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment:global@044d0e900
+INFO uika806.vm4.VM4 IN: r, argument=(#f)
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : <procedure ??>
+INFO uika806.vm4.VM4 IN: expr : APPLY
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment:global@044d0e900
+INFO uika806.vm4.VM4 IN: r, argument=(#f)
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+DEBUG uika806.syntax.SchemeEnvironment   ********** extend (=>), (#f)
+DEBUG uika806.syntax.SchemeEnvironment ********** newEnv= uika806.syntax.SchemeEnvironment@640bee4b
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : <procedure ??>
+INFO uika806.vm4.VM4 IN: expr : CONSTANT #t
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment[ =>=false ]@0640bee4b
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : #t
+INFO uika806.vm4.VM4 IN: expr : TEST
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment[ =>=false ]@0640bee4b
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : #t
+INFO uika806.vm4.VM4 IN: expr : CLOSE ()
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment[ =>=false ]@0640bee4b
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : <procedure ??>
+INFO uika806.vm4.VM4 IN: expr : APPLY
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment[ =>=false ]@0640bee4b
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+DEBUG uika806.syntax.SchemeEnvironment   ********** extend (), ()
+DEBUG uika806.syntax.SchemeEnvironment ********** newEnv= uika806.syntax.SchemeEnvironment@4618c7b4
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : <procedure ??>
+INFO uika806.vm4.VM4 IN: expr : REFER @ 054d43587 =>
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment[  ]@04618c7b4
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : #f
+INFO uika806.vm4.VM4 IN: expr : CONSTANT ok
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment[  ]@04618c7b4
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : ok
+INFO uika806.vm4.VM4 IN: expr : RETURN @ 04130d874
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment[  ]@04618c7b4
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=#<java DumpRecord[HALT]>
+INFO uika806.vm4.VM4 ----------------------
+INFO uika806.vm4.VM4 IN: accm : ok
+INFO uika806.vm4.VM4 IN: expr : HALT
+INFO uika806.vm4.VM4 IN: env : SchemeEnvironment:global@044d0e900
+INFO uika806.vm4.VM4 IN: r, argument=()
+INFO uika806.vm4.VM4 IN: s dump=null
+INFO uika806.gui5.JPanelV5 ------------- done 36 mills
+INFO uika806.gui5.JPanelV5 ================= Eval thread end
